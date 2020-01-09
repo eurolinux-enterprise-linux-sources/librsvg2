@@ -13,7 +13,7 @@
 Name: 	 librsvg2
 Summary: An SVG library based on cairo
 Version: 2.26.0
-Release: 5%{?dist}
+Release: 5%{?dist}.1
 
 License: 	LGPLv2+
 Group: 		System Environment/Libraries
@@ -46,6 +46,9 @@ Patch0: no-xml-cleanup.patch
 # https://bugzilla.redhat.com/show_bug.cgi?id=539315
 Patch1: librsvg-python-env.patch
 
+# https://bugzilla.redhat.com/show_bug.cgi?id=735266
+Patch2: librsvg-CVE-2011-3146.patch
+
 %description
 An SVG library based on cairo.
 
@@ -69,6 +72,7 @@ files to allow you to develop with librsvg.
 %setup -q -n librsvg-%{version}
 %patch0 -p1 -b .no-xml-cleanup
 %patch1 -p1 -b .python-env
+%patch2 -p1 -b .CVE-2011-3146
 
 %build
 %configure --with-svgz \
@@ -124,6 +128,10 @@ rm -rf $RPM_BUILD_ROOT
 %doc %{_datadir}/gtk-doc/html/rsvg
 
 %changelog
+* Wed Sep  7 2011 Marek Kasik <mkasik@redhat.com> - 2.26.0-5.el6_1.1
+- Store node type separately in RsvgNode (CVE-2011-3146)
+  Resolves: #735266
+
 * Mon May 17 2010 Matthias Clasen <mclasen@redhat.com> - 2.16.0-5
 - Use /usr/bin/python, not /usr/bin/env python
 Resolves: #539315
