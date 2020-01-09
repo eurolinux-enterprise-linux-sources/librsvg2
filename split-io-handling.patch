@@ -171,7 +171,7 @@ diff -up librsvg-2.26.0/rsvg-base.c.split-io librsvg-2.26.0/rsvg-base.c
  
      if (type == XML_EXTERNAL_PARAMETER_ENTITY && !content) {
 -      GByteArray *arr;
-+	guint8 *entity_data;
++	guint8 *entity_data = NULL;
 +	gsize entity_data_len;
 +
 +	if (systemId)
@@ -415,7 +415,7 @@ diff -up librsvg-2.26.0/rsvg-io.c.split-io librsvg-2.26.0/rsvg-io.c
 +*/
 +
 +#include "config.h"
-+
++#include "rsvg-image.h"
 +#include "rsvg-io.h"
 +#include "rsvg-private.h"
 +

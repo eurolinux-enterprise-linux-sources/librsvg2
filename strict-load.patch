@@ -5,7 +5,7 @@ diff -up librsvg-2.26.0/rsvg-base.c.strict-load librsvg-2.26.0/rsvg-base.c
  
  #include "config.h"
  
-+
++#define _GNU_SOURCE
  #ifdef HAVE_SVGZ
  #include <gsf/gsf-input-gzip.h>
  #include <gsf/gsf-input-memory.h>
@@ -23,7 +23,7 @@ diff -up librsvg-2.26.0/rsvg-base.c.strict-load librsvg-2.26.0/rsvg-base.c
  #include "rsvg-paint-server.h"
  
 +#include "rsvg-xml.h"
-+
++#include <stdlib.h>
  /*
   * This is configurable at runtime
   */

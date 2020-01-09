@@ -13,21 +13,23 @@
 Name: 	 librsvg2
 Summary: An SVG library based on cairo
 Version: 2.26.0
-Release: 6%{?dist}.3
+Release: 14%{?dist}
 
 License: 	LGPLv2+
 Group: 		System Environment/Libraries
 Source: 	http://download.gnome.org/sources/librsvg/2.26/librsvg-%{version}.tar.bz2
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
+Requires:	gdk-pixbuf2
 Requires:	gtk2 >= %{gtk2_version}
 Requires:	libxml2 >= %{libxml2_version}
 Requires:	freetype >= %{freetype_version}
 Requires:       cairo >= %{cairo_version}
 Requires:	libgsf >= %{libgsf_version}
-Requires(post):		gtk2 >= %{gtk2_version}
-Requires(postun):	gtk2 >= %{gtk2_version}
+Requires(post):		gdk-pixbuf2
+Requires(postun):	gdk-pixbuf2
 BuildRequires:  libpng-devel
 BuildRequires:	glib2-devel >= %{glib2_version}
+BuildRequires:	gdk-pixbuf2-devel
 BuildRequires:	gtk2-devel >= %{gtk2_version}
 BuildRequires:	libxml2-devel >= %{libxml2_version}
 BuildRequires:	freetype-devel >= %{freetype_version}
@@ -62,6 +64,10 @@ Patch7: parse-nonet.patch
 # f01aded72c38f0e18bc7ff67dee800e380251c8e
 # 3d28e419d726d972b178325c25b4f8d17aca17c1
 Patch8: strict-load.patch
+# https://bugzilla.redhat.com/show_bug.cgi?id=1015044
+Patch9: 0001-render-correctly-no-width-and-height-specification-S.patch
+# https://bugzilla.redhat.com/show_bug.cgi?id=1104681
+Patch10: librsvg-gdk-pixbuf.patch
 
 %description
 An SVG library based on cairo.
@@ -71,6 +77,7 @@ An SVG library based on cairo.
 Summary: 	Libraries and include files for developing with librsvg
 Group: 		Development/Libraries
 Requires:	%{name} = %{version}-%{release}
+Requires:	gdk-pixbuf2-devel
 Requires:	gtk2-devel >= %{gtk2_version}
 Requires:	libxml2-devel >= %{libxml2_version}
 Requires:	freetype-devel >= %{freetype_version}
@@ -93,6 +100,8 @@ files to allow you to develop with librsvg.
 %patch6 -p1 -b .permission-check
 %patch7 -p1 -b .parse-nonet
 %patch8 -p1 -b .strict-load
+%patch9 -p1 -b .viewbox
+%patch10 -p1 -b .gdk-pixbuf
 
 %build
 %configure --with-svgz \
@@ -100,6 +109,7 @@ files to allow you to develop with librsvg.
 	--enable-gtk-theme \
 	--enable-gnome-vfs \
 	--with-croco \
+	--disable-mozilla-plugin
 
 make
 
@@ -110,11 +120,8 @@ rm -f $RPM_BUILD_ROOT%{_libdir}/*.la
 rm -f $RPM_BUILD_ROOT%{_libdir}/*.a
 rm -f $RPM_BUILD_ROOT%{_libdir}/gtk-2.0/*/engines/libsvg.a
 rm -f $RPM_BUILD_ROOT%{_libdir}/gtk-2.0/*/engines/libsvg.la
-rm -f $RPM_BUILD_ROOT%{_libdir}/gtk-2.0/*/loaders/svg_loader.a
-rm -f $RPM_BUILD_ROOT%{_libdir}/gtk-2.0/*/loaders/svg_loader.la
-rm -f $RPM_BUILD_ROOT%{_libdir}/mozilla/plugins/libmozsvgdec.a
-rm -f $RPM_BUILD_ROOT%{_libdir}/mozilla/plugins/libmozsvgdec.la
-rm -f $RPM_BUILD_ROOT%{_libdir}/mozilla/plugins/libmozsvgdec.so
+rm -f $RPM_BUILD_ROOT%{_libdir}/gdk-pixbuf-2.0/*/loaders/svg_loader.a
+rm -f $RPM_BUILD_ROOT%{_libdir}/gdk-pixbuf-2.0/*/loaders/svg_loader.la
 rm -f $RPM_BUILD_ROOT%{_sysconfdir}/gtk-2.0/gdk-pixbuf.loaders
 rm -f $RPM_BUILD_ROOT%{_datadir}/pixmaps/svg-viewer.svg
 
@@ -123,18 +130,18 @@ rm -rf $RPM_BUILD_ROOT
 
 %post
 /sbin/ldconfig
-%{_bindir}/update-gdk-pixbuf-loaders %{_host} || :
+gdk-pixbuf-query-loaders-%{__isa_bits} --update-cache || :
 
 %postun
 /sbin/ldconfig
-%{_bindir}/update-gdk-pixbuf-loaders %{_host} || :
+gdk-pixbuf-query-loaders-%{__isa_bits} --update-cache || :
 
 %files
 %defattr(-, root, root)
 %doc AUTHORS COPYING COPYING.LIB NEWS README
 %{_libdir}/*.so.*
 %{_libdir}/gtk-2.0/*/engines/libsvg.so
-%{_libdir}/gtk-2.0/*/loaders/svg_loader.so
+%{_libdir}/gdk-pixbuf-2.0/*/loaders/svg_loader.so
 %{_bindir}/rsvg
 %{_bindir}/rsvg-view
 %{_bindir}/rsvg-convert
@@ -148,14 +155,36 @@ rm -rf $RPM_BUILD_ROOT
 %doc %{_datadir}/gtk-doc/html/rsvg
 
 %changelog
+* Fri Aug 22 2014 Ray Strode <rstrode@redhat.com> 2.26.0-14
+- Fix for s390x
+  Resolves: #1127719
+
+* Mon Jul 14 2014 Marek Kasik <mkasik@redhat.com> - 2.26.0-13
+- Explicitly disable building of Mozilla/Firefox SVG viewing plugin
+- Resolves: #1119199
+
+* Mon Jun 16 2014 Marek Kasik <mkasik@redhat.com> - 2.26.0-12
+- Allow building with gdk-pixbuf-2.0
+- Resolves: #1104681
+
+* Fri May  9 2014 Benjamin Otte <otte@redhat.com> - 2.26.0-11
+- Honor viewBox
+  Resolves: #1015044
+
 * Tue Feb  4 2014 Tomas Hoger <thoger@redhat.com> - 2.26.0-6.3
 - Fix add-permission-check.patch to update all rsvg_pixbuf_new_from_href()
   callers
 
-* Tue Jan 14 2014 Jasper St. Pierre <jasper@redhat.com> - 2.26.0-6.1
-- Fix build by linking in -lm
+* Tue Jan 14 2014 Jasper St. Pierre <jasper@redhat.com> - 2.26.0-9
+- Bump release
+  Resolves: #1049156
+
+* Tue Jan 14 2014 Jasper St. Pierre <jasper@redhat.com> - 2.26.0-8
 - io: Implement strict network policy (CVE-2013-1881)
-  Resolves: #1049155
+  Resolves: #1049156
+
+* Tue Jan 14 2014 Jasper St. Pierre <jasper@redhat.com> - 2.26.0-7
+- Fix build by linking in -lm
 
 * Wed Sep  7 2011 Marek Kasik <mkasik@redhat.com> - 2.26.0-6
 - Store node type separately in RsvgNode (CVE-2011-3146)
