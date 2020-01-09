@@ -13,7 +13,7 @@
 Name: 	 librsvg2
 Summary: An SVG library based on cairo
 Version: 2.26.0
-Release: 6%{?dist}.2
+Release: 6%{?dist}.3
 
 License: 	LGPLv2+
 Group: 		System Environment/Libraries
@@ -148,6 +148,10 @@ rm -rf $RPM_BUILD_ROOT
 %doc %{_datadir}/gtk-doc/html/rsvg
 
 %changelog
+* Tue Feb  4 2014 Tomas Hoger <thoger@redhat.com> - 2.26.0-6.3
+- Fix add-permission-check.patch to update all rsvg_pixbuf_new_from_href()
+  callers
+
 * Tue Jan 14 2014 Jasper St. Pierre <jasper@redhat.com> - 2.26.0-6.1
 - Fix build by linking in -lm
 - io: Implement strict network policy (CVE-2013-1881)

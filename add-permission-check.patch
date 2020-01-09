@@ -1,7 +1,7 @@
-diff -u librsvg-2.26.0.a/rsvg-base.c librsvg-2.26.0.b/rsvg-base.c
---- librsvg-2.26.0.a/rsvg-base.c	2014-01-15 20:36:15.141248283 -0500
-+++ librsvg-2.26.0.b/rsvg-base.c	2014-01-15 20:56:01.992092644 -0500
-@@ -575,7 +575,7 @@
+diff -pruN librsvg-2.26.0.orig/rsvg-base.c librsvg-2.26.0/rsvg-base.c
+--- librsvg-2.26.0.orig/rsvg-base.c	2014-02-04 11:14:41.000000000 +0100
++++ librsvg-2.26.0/rsvg-base.c	2014-02-04 11:15:14.000000000 +0100
+@@ -575,7 +575,7 @@ rsvg_start_xinclude (RsvgHandle * ctx, R
  	gsize data_len;
  	const char *encoding;
  
@@ -10,7 +10,7 @@ diff -u librsvg-2.26.0.a/rsvg-base.c librsvg-2.26.0.b/rsvg-base.c
  	if (data == NULL)
  	    goto fallback;
  
-@@ -605,7 +605,7 @@
+@@ -605,7 +605,7 @@ rsvg_start_xinclude (RsvgHandle * ctx, R
  	xmlParserInputPtr input;
  	int result;
  
@@ -19,7 +19,7 @@ diff -u librsvg-2.26.0.a/rsvg-base.c librsvg-2.26.0.b/rsvg-base.c
  	if (stream == NULL)
  	    goto fallback;
  
-@@ -847,15 +847,15 @@
+@@ -847,15 +847,15 @@ rsvg_entity_decl (void *data, const xmlC
  	gsize entity_data_len;
  
  	if (systemId)
@@ -43,7 +43,7 @@ diff -u librsvg-2.26.0.a/rsvg-base.c librsvg-2.26.0.b/rsvg-base.c
  	if (entity_data) {
  	    content = xmlCharStrndup (entity_data, entity_data_len);
  	    g_free (entity_data);
-@@ -970,10 +970,10 @@
+@@ -970,10 +970,10 @@ rsvg_processing_instruction (void *ctx,
                          guint8 *style_data;
                          gsize style_data_len;
  
@@ -58,7 +58,7 @@ diff -u librsvg-2.26.0.a/rsvg-base.c librsvg-2.26.0.b/rsvg-base.c
                          if (style_data) {
                              rsvg_parse_cssbuffer (handle, (char *) style_data, style_data_len);
                             g_free (style_data);
-@@ -1092,7 +1092,6 @@
+@@ -1092,7 +1092,6 @@ rsvg_handle_set_base_uri (RsvgHandle * h
          if (handle->priv->base_uri)
              g_free (handle->priv->base_uri);
          handle->priv->base_uri = uri;
@@ -66,7 +66,7 @@ diff -u librsvg-2.26.0.a/rsvg-base.c librsvg-2.26.0.b/rsvg-base.c
      }
  }
  
-@@ -2047,3 +2046,40 @@
+@@ -2047,3 +2046,40 @@ rsvg_return_if_fail_warning (const char
  {
      g_set_error (error, RSVG_ERROR, 0, _("%s: assertion `%s' failed"), pretty_function, expression);
  }
@@ -107,10 +107,10 @@ diff -u librsvg-2.26.0.a/rsvg-base.c librsvg-2.26.0.b/rsvg-base.c
 +
 +    return _rsvg_io_acquire_stream (uri, rsvg_handle_get_base_uri (handle), error);
 +}
-diff -u librsvg-2.26.0.a/rsvg-defs.c librsvg-2.26.0.b/rsvg-defs.c
---- librsvg-2.26.0.a/rsvg-defs.c	2014-01-15 20:37:47.777081828 -0500
-+++ librsvg-2.26.0.b/rsvg-defs.c	2014-01-15 20:58:02.413891757 -0500
-@@ -35,8 +35,8 @@
+diff -pruN librsvg-2.26.0.orig/rsvg-defs.c librsvg-2.26.0/rsvg-defs.c
+--- librsvg-2.26.0.orig/rsvg-defs.c	2014-02-04 11:14:41.000000000 +0100
++++ librsvg-2.26.0/rsvg-defs.c	2014-02-04 11:15:14.000000000 +0100
+@@ -35,8 +35,8 @@ struct _RsvgDefs {
      GHashTable *hash;
      GPtrArray *unnamed;
      GHashTable *externs;
@@ -120,7 +120,7 @@ diff -u librsvg-2.26.0.a/rsvg-defs.c librsvg-2.26.0.b/rsvg-defs.c
  };
  
  typedef struct _RsvgResolutionPending RsvgResolutionPending;
-@@ -47,7 +47,7 @@
+@@ -47,7 +47,7 @@ struct _RsvgResolutionPending {
  };
  
  RsvgDefs *
@@ -129,7 +129,7 @@ diff -u librsvg-2.26.0.a/rsvg-defs.c librsvg-2.26.0.b/rsvg-defs.c
  {
      RsvgDefs *result = g_new (RsvgDefs, 1);
  
-@@ -55,18 +55,12 @@
+@@ -55,18 +55,12 @@ rsvg_defs_new (void)
      result->externs =
          g_hash_table_new_full (g_str_hash, g_str_equal, g_free, (GDestroyNotify) g_object_unref);
      result->unnamed = g_ptr_array_new ();
@@ -149,7 +149,7 @@ diff -u librsvg-2.26.0.a/rsvg-defs.c librsvg-2.26.0.b/rsvg-defs.c
  static int
  rsvg_defs_load_extern (const RsvgDefs * defs, const char *name)
  {
-@@ -75,9 +69,9 @@
+@@ -75,9 +69,9 @@ rsvg_defs_load_extern (const RsvgDefs *
      guint8 *data;
      gsize data_len;
  
@@ -161,9 +161,9 @@ diff -u librsvg-2.26.0.a/rsvg-defs.c librsvg-2.26.0.b/rsvg-defs.c
  
      if (data) {
          handle = rsvg_handle_new ();
-diff -u librsvg-2.26.0.a/rsvg-defs.h librsvg-2.26.0.b/rsvg-defs.h
---- librsvg-2.26.0.a/rsvg-defs.h	2014-01-15 21:17:15.304991406 -0500
-+++ librsvg-2.26.0.b/rsvg-defs.h	2014-01-15 21:03:13.425389887 -0500
+diff -pruN librsvg-2.26.0.orig/rsvg-defs.h librsvg-2.26.0/rsvg-defs.h
+--- librsvg-2.26.0.orig/rsvg-defs.h	2009-02-20 00:20:06.000000000 +0100
++++ librsvg-2.26.0/rsvg-defs.h	2014-02-04 11:15:14.000000000 +0100
 @@ -30,13 +30,14 @@
  
  #include <glib.h>
@@ -181,10 +181,10 @@ diff -u librsvg-2.26.0.a/rsvg-defs.h librsvg-2.26.0.b/rsvg-defs.h
  void	     rsvg_defs_add_resolver	(RsvgDefs * defs, RsvgNode ** tochange, const gchar * name);
  void	     rsvg_defs_resolve_all	(RsvgDefs * defs);
  void	     rsvg_defs_register_name	(RsvgDefs * defs, const char *name, RsvgNode * val);
-diff -u librsvg-2.26.0.a/rsvg-filter.c librsvg-2.26.0.b/rsvg-filter.c
---- librsvg-2.26.0.a/rsvg-filter.c	2014-01-15 21:17:23.209977839 -0500
-+++ librsvg-2.26.0.b/rsvg-filter.c	2014-01-15 21:10:24.604683477 -0500
-@@ -3357,8 +3357,7 @@
+diff -pruN librsvg-2.26.0.orig/rsvg-filter.c librsvg-2.26.0/rsvg-filter.c
+--- librsvg-2.26.0.orig/rsvg-filter.c	2014-02-04 11:14:41.000000000 +0100
++++ librsvg-2.26.0/rsvg-filter.c	2014-02-04 11:15:14.000000000 +0100
+@@ -3361,8 +3361,7 @@ rsvg_filter_primitive_image_render_ext (
  
      boundarys = rsvg_filter_primitive_get_bounds (self, ctx);
  
@@ -194,10 +194,10 @@ diff -u librsvg-2.26.0.a/rsvg-filter.c librsvg-2.26.0.b/rsvg-filter.c
  
      if (!img)
          return NULL;
-diff -u librsvg-2.26.0.a/rsvg-gobject.c librsvg-2.26.0.b/rsvg-gobject.c
---- librsvg-2.26.0.a/rsvg-gobject.c	2014-01-15 21:17:32.833961357 -0500
-+++ librsvg-2.26.0.b/rsvg-gobject.c	2014-01-15 21:12:39.240460699 -0500
-@@ -47,7 +47,8 @@
+diff -pruN librsvg-2.26.0.orig/rsvg-gobject.c librsvg-2.26.0/rsvg-gobject.c
+--- librsvg-2.26.0.orig/rsvg-gobject.c	2008-11-22 17:37:14.000000000 +0100
++++ librsvg-2.26.0/rsvg-gobject.c	2014-02-04 11:15:14.000000000 +0100
+@@ -47,7 +47,8 @@ static void
  instance_init (RsvgHandle * self)
  {
      self->priv = g_new0 (RsvgHandlePrivate, 1);
@@ -207,10 +207,10 @@ diff -u librsvg-2.26.0.a/rsvg-gobject.c librsvg-2.26.0.b/rsvg-gobject.c
      self->priv->handler_nest = 0;
      self->priv->entities = g_hash_table_new (g_str_hash, g_str_equal);
      self->priv->dpi_x = rsvg_internal_dpi_x;
-diff -u librsvg-2.26.0.a/rsvg-image.c librsvg-2.26.0.b/rsvg-image.c
---- librsvg-2.26.0.a/rsvg-image.c	2014-01-15 21:17:41.305946761 -0500
-+++ librsvg-2.26.0.b/rsvg-image.c	2014-01-15 21:09:23.570784146 -0500
-@@ -378,20 +378,21 @@
+diff -pruN librsvg-2.26.0.orig/rsvg-image.c librsvg-2.26.0/rsvg-image.c
+--- librsvg-2.26.0.orig/rsvg-image.c	2014-02-04 11:14:41.000000000 +0100
++++ librsvg-2.26.0/rsvg-image.c	2014-02-04 11:17:49.332226767 +0100
+@@ -378,20 +378,21 @@ _rsvg_acquire_xlink_href_resource (const
  }
  
  GdkPixbuf *
@@ -238,10 +238,19 @@ diff -u librsvg-2.26.0.a/rsvg-image.c librsvg-2.26.0.b/rsvg-image.c
  
          if (!res) {
              gdk_pixbuf_loader_close (loader, NULL);
-diff -u librsvg-2.26.0.a/rsvg-image.h librsvg-2.26.0.b/rsvg-image.h
---- librsvg-2.26.0.a/rsvg-image.h	2014-01-15 21:17:48.671934141 -0500
-+++ librsvg-2.26.0.b/rsvg-image.h	2014-01-15 21:06:26.620074761 -0500
-@@ -50,7 +50,7 @@
+@@ -528,7 +529,7 @@ rsvg_node_image_set_atts (RsvgNode * sel
+         /* path is used by some older adobe illustrator versions */
+         if ((value = rsvg_property_bag_lookup (atts, "path"))
+             || (value = rsvg_property_bag_lookup (atts, "xlink:href"))) {
+-            image->img = rsvg_pixbuf_new_from_href (value, rsvg_handle_get_base_uri (ctx), NULL);
++            image->img = rsvg_pixbuf_new_from_href (ctx, value, NULL);
+ 
+             if (!image->img) {
+ #ifdef G_ENABLE_DEBUG
+diff -pruN librsvg-2.26.0.orig/rsvg-image.h librsvg-2.26.0/rsvg-image.h
+--- librsvg-2.26.0.orig/rsvg-image.h	2008-08-20 14:41:00.000000000 +0200
++++ librsvg-2.26.0/rsvg-image.h	2014-02-04 11:15:14.000000000 +0100
+@@ -50,7 +50,7 @@ void rsvg_preserve_aspect_ratio (unsigne
  
  gchar *rsvg_get_file_path (const gchar * filename, const gchar * basedir);
  
@@ -250,10 +259,10 @@ diff -u librsvg-2.26.0.a/rsvg-image.h librsvg-2.26.0.b/rsvg-image.h
  
  G_END_DECLS
  
-diff -u librsvg-2.26.0.a/rsvg-private.h librsvg-2.26.0.b/rsvg-private.h
---- librsvg-2.26.0.a/rsvg-private.h	2014-01-15 20:45:49.441205819 -0500
-+++ librsvg-2.26.0.b/rsvg-private.h	2014-01-15 21:14:41.627255003 -0500
-@@ -123,7 +123,15 @@
+diff -pruN librsvg-2.26.0.orig/rsvg-private.h librsvg-2.26.0/rsvg-private.h
+--- librsvg-2.26.0.orig/rsvg-private.h	2014-02-04 11:14:41.000000000 +0100
++++ librsvg-2.26.0/rsvg-private.h	2014-02-04 11:15:14.000000000 +0100
+@@ -123,7 +123,15 @@ struct RsvgSaxHandler {
      void (*characters) (RsvgSaxHandler * self, const char *ch, int len);
  };
  
@@ -269,7 +278,7 @@ diff -u librsvg-2.26.0.a/rsvg-private.h librsvg-2.26.0.b/rsvg-private.h
      gboolean is_disposed;
      gboolean is_closed;
  
-@@ -415,6 +423,14 @@
+@@ -415,6 +423,14 @@ void rsvg_SAX_handler_struct_init (void)
  
  char *rsvg_get_url_string (const char *str);
  
@@ -284,9 +293,9 @@ diff -u librsvg-2.26.0.a/rsvg-private.h librsvg-2.26.0.b/rsvg-private.h
  void rsvg_return_if_fail_warning (const char *pretty_function,
                                    const char *expression, GError ** error);
  
-diff -u librsvg-2.26.0.a/rsvg-styles.c librsvg-2.26.0.b/rsvg-styles.c
---- librsvg-2.26.0.a/rsvg-styles.c	2014-01-15 20:47:25.222031432 -0500
-+++ librsvg-2.26.0.b/rsvg-styles.c	2014-01-15 21:15:43.939148155 -0500
+diff -pruN librsvg-2.26.0.orig/rsvg-styles.c librsvg-2.26.0/rsvg-styles.c
+--- librsvg-2.26.0.orig/rsvg-styles.c	2014-02-04 11:14:41.000000000 +0100
++++ librsvg-2.26.0/rsvg-styles.c	2014-02-04 11:15:14.000000000 +0100
 @@ -29,7 +29,6 @@
  #include "rsvg-private.h"
  #include "rsvg-filter.h"
@@ -295,7 +304,7 @@ diff -u librsvg-2.26.0.a/rsvg-styles.c librsvg-2.26.0.b/rsvg-styles.c
  #include "rsvg-styles.h"
  #include "rsvg-shapes.h"
  #include "rsvg-mask.h"
-@@ -1029,10 +1028,10 @@
+@@ -1029,10 +1028,10 @@ ccss_import_style (CRDocHandler * a_this
      if (a_uri == NULL)
          return;
  
@@ -310,4 +319,3 @@ diff -u librsvg-2.26.0.a/rsvg-styles.c librsvg-2.26.0.b/rsvg-styles.c
      if (stylesheet_data == NULL)
          return;
  
-Common subdirectories: librsvg-2.26.0.a/tests and librsvg-2.26.0.b/tests
