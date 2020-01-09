@@ -13,7 +13,7 @@
 Name: 	 librsvg2
 Summary: An SVG library based on cairo
 Version: 2.26.0
-Release: 5%{?dist}.1
+Release: 6%{?dist}.2
 
 License: 	LGPLv2+
 Group: 		System Environment/Libraries
@@ -46,8 +46,22 @@ Patch0: no-xml-cleanup.patch
 # https://bugzilla.redhat.com/show_bug.cgi?id=539315
 Patch1: librsvg-python-env.patch
 
-# https://bugzilla.redhat.com/show_bug.cgi?id=735266
+# https://bugzilla.redhat.com/show_bug.cgi?id=735267
 Patch2: librsvg-CVE-2011-3146.patch
+
+Patch3: fix-pdiff-build.patch
+
+# 9aa2584d2bc8cae32e90f50e4d10e7126e70751b
+Patch4: 0001-Add-rsvg-xml.-ch.patch
+# 1291ebc3a5cb8addfa97aa56365f15e2427beb22
+Patch5: split-io-handling.patch
+# a2e869cb700c13804056820fd4afa215e551b9c5
+Patch6: add-permission-check.patch
+# d83e426fff3f6d0fa6042d0930fb70357db24125
+Patch7: parse-nonet.patch
+# f01aded72c38f0e18bc7ff67dee800e380251c8e
+# 3d28e419d726d972b178325c25b4f8d17aca17c1
+Patch8: strict-load.patch
 
 %description
 An SVG library based on cairo.
@@ -73,6 +87,12 @@ files to allow you to develop with librsvg.
 %patch0 -p1 -b .no-xml-cleanup
 %patch1 -p1 -b .python-env
 %patch2 -p1 -b .CVE-2011-3146
+%patch3 -p1 -b .fix-pdiff-build
+%patch4 -p1 -b .xml
+%patch5 -p1 -b .split-io
+%patch6 -p1 -b .permission-check
+%patch7 -p1 -b .parse-nonet
+%patch8 -p1 -b .strict-load
 
 %build
 %configure --with-svgz \
@@ -128,9 +148,14 @@ rm -rf $RPM_BUILD_ROOT
 %doc %{_datadir}/gtk-doc/html/rsvg
 
 %changelog
-* Wed Sep  7 2011 Marek Kasik <mkasik@redhat.com> - 2.26.0-5.el6_1.1
+* Tue Jan 14 2014 Jasper St. Pierre <jasper@redhat.com> - 2.26.0-6.1
+- Fix build by linking in -lm
+- io: Implement strict network policy (CVE-2013-1881)
+  Resolves: #1049155
+
+* Wed Sep  7 2011 Marek Kasik <mkasik@redhat.com> - 2.26.0-6
 - Store node type separately in RsvgNode (CVE-2011-3146)
-  Resolves: #735266
+  Resolves: #735267
 
 * Mon May 17 2010 Matthias Clasen <mclasen@redhat.com> - 2.16.0-5
 - Use /usr/bin/python, not /usr/bin/env python
