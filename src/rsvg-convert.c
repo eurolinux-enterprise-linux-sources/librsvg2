@@ -34,10 +34,23 @@
 #include <stdlib.h>
 #include <string.h>
 #include <locale.h>
+#include <glib/gi18n.h>
+#include <gio/gio.h>
+
+#ifdef G_OS_UNIX
+#include <gio/gunixinputstream.h>
+#endif
+
+#ifdef G_OS_WIN32
+#define WIN32_LEAN_AND_MEAN
+#include <windows.h>
+
+#include <gio/gwin32inputstream.h>
+#endif
 
 #include "rsvg-css.h"
 #include "rsvg.h"
-#include "rsvg-private.h"
+#include "rsvg-compat.h"
 #include "rsvg-size-callback.h"
 
 #ifdef CAIRO_HAS_PS_SURFACE
@@ -65,52 +78,6 @@ display_error (GError * err)
     }
 }
 
-static RsvgHandle *
-rsvg_handle_new_from_stdio_file (FILE * f, GError ** error)
-{
-    RsvgHandle *handle;
-    gchar *current_dir;
-    gchar *base_uri;
-
-    handle = rsvg_handle_new ();
-
-    while (!feof (f)) {
-        guchar buffer[4096];
-        gsize length = fread (buffer, 1, sizeof (buffer), f);
-
-        if (length > 0) {
-            if (!rsvg_handle_write (handle, buffer, length, error)) {
-                g_object_unref (handle);
-                return NULL;
-            }
-        } else if (ferror (f)) {
-            g_object_unref (handle);
-            return NULL;
-        }
-    }
-
-    if (!rsvg_handle_close (handle, error)) {
-        g_object_unref (handle);
-        return NULL;
-    }
-
-    current_dir = g_get_current_dir ();
-    base_uri = g_build_filename (current_dir, "file.svg", NULL);
-    rsvg_handle_set_base_uri (handle, base_uri);
-    g_free (base_uri);
-    g_free (current_dir);
-
-    return handle;
-}
-
-static void
-rsvg_cairo_size_callback (int *width, int *height, gpointer data)
-{
-    RsvgDimensionData *dimensions = data;
-    *width = dimensions->width;
-    *height = dimensions->height;
-}
-
 static cairo_status_t
 rsvg_cairo_write_func (void *closure, const unsigned char *data, unsigned int length)
 {
@@ -119,6 +86,26 @@ rsvg_cairo_write_func (void *closure, const unsigned char *data, unsigned int le
     return CAIRO_STATUS_WRITE_ERROR;
 }
 
+static char *
+get_lookup_id_from_command_line (const char *lookup_id)
+{
+    char *export_lookup_id;
+
+    if (lookup_id == NULL)
+        export_lookup_id = NULL;
+    else {
+        /* rsvg_handle_has_sub() and rsvg_defs_lookup() expect ids to have a
+         * '#' prepended to them, so they can lookup ids in externs like
+         * "subfile.svg#subid".  For the user's convenience, we include this
+         * '#' automatically; we only support specifying ids from the
+         * toplevel, and don't expect users to lookup things in externs.
+         */
+        export_lookup_id = g_strdup_printf ("#%s", lookup_id);
+    }
+
+    return export_lookup_id;
+}
+ 
 int
 main (int argc, char **argv)
 {
@@ -133,21 +120,32 @@ main (int argc, char **argv)
     int bVersion = 0;
     char *format = NULL;
     char *output = NULL;
+    char *export_id = NULL;
     int keep_aspect_ratio = FALSE;
     guint32 background_color = 0;
     char *background_color_str = NULL;
-    char *base_uri = NULL;
     gboolean using_stdin = FALSE;
+    gboolean unlimited = FALSE;
+    gboolean keep_image_data = FALSE;
+    gboolean no_keep_image_data = FALSE;
     GError *error = NULL;
 
     int i;
     char **args = NULL;
     gint n_args = 0;
-    RsvgHandle *rsvg;
+    RsvgHandle *rsvg = NULL;
     cairo_surface_t *surface = NULL;
     cairo_t *cr = NULL;
+    RsvgHandleFlags flags = RSVG_HANDLE_FLAGS_NONE;
     RsvgDimensionData dimensions;
     FILE *output_file = stdout;
+    char *export_lookup_id;
+    double unscaled_width, unscaled_height;
+    int scaled_width, scaled_height;
+
+#ifdef G_OS_WIN32
+    HANDLE handle;
+#endif
 
     GOptionEntry options_table[] = {
         {"dpi-x", 'd', 0, G_OPTION_ARG_DOUBLE, &dpi_x,
@@ -165,15 +163,19 @@ main (int argc, char **argv)
         {"height", 'h', 0, G_OPTION_ARG_INT, &height,
          N_("height [optional; defaults to the SVG's height]"), N_("<int>")},
         {"format", 'f', 0, G_OPTION_ARG_STRING, &format,
-         N_("save format [optional; defaults to 'png']"), N_("[png, pdf, ps, svg, xml, recording]")},
+         N_("save format [optional; defaults to 'png']"), N_("[png, pdf, ps, eps, svg, xml, recording]")},
         {"output", 'o', 0, G_OPTION_ARG_STRING, &output,
          N_("output filename [optional; defaults to stdout]"), NULL},
+        {"export-id", 'i', 0, G_OPTION_ARG_STRING, &export_id,
+         N_("SVG id of object to export [optional; defaults to exporting all objects]"), N_("<object id>")},
         {"keep-aspect-ratio", 'a', 0, G_OPTION_ARG_NONE, &keep_aspect_ratio,
          N_("whether to preserve the aspect ratio [optional; defaults to FALSE]"), NULL},
         {"background-color", 'b', 0, G_OPTION_ARG_STRING, &background_color_str,
          N_("set the background color [optional; defaults to None]"), N_("[black, white, #abccee, #aaa...]")},
+        {"unlimited", 'u', 0, G_OPTION_ARG_NONE, &unlimited, N_("Allow huge SVG files"), NULL},
+        {"keep-image-data", 0, 0, G_OPTION_ARG_NONE, &keep_image_data, N_("Keep image data"), NULL},
+        {"no-keep-image-data", 0, 0, G_OPTION_ARG_NONE, &no_keep_image_data, N_("Don't keep image data"), NULL},
         {"version", 'v', 0, G_OPTION_ARG_NONE, &bVersion, N_("show version information"), NULL},
-        {"base-uri", 'b', 0, G_OPTION_ARG_STRING, &base_uri, N_("base uri"), NULL},
         {G_OPTION_REMAINING, 0, 0, G_OPTION_ARG_FILENAME_ARRAY, &args, NULL, N_("[FILE...]")},
         {NULL}
     };
@@ -181,7 +183,7 @@ main (int argc, char **argv)
     /* Set the locale so that UTF-8 filenames work */
     setlocale(LC_ALL, "");
 
-    g_type_init ();
+    RSVG_G_TYPE_INIT;
 
     g_option_context = g_option_context_new (_("- SVG Converter"));
     g_option_context_add_main_entries (g_option_context, options_table, NULL);
@@ -202,7 +204,7 @@ main (int argc, char **argv)
     if (output != NULL) {
         output_file = fopen (output, "wb");
         if (!output_file) {
-            fprintf (stderr, _("Error saving to file: %s\n"), output);
+            g_printerr (_("Error saving to file: %s\n"), output);
             g_free (output);
             exit (1);
         }
@@ -217,49 +219,118 @@ main (int argc, char **argv)
     if (n_args == 0) {
         n_args = 1;
         using_stdin = TRUE;
-    } else if (n_args > 1 && (!format || !(!strcmp (format, "ps") || !strcmp (format, "pdf")))) {
-        fprintf (stderr, _("Multiple SVG files are only allowed for PDF and PS output.\n"));
+    } else if (n_args > 1 && (!format || !(!strcmp (format, "ps") || !strcmp (format, "eps") || !strcmp (format, "pdf")))) {
+        g_printerr (_("Multiple SVG files are only allowed for PDF and (E)PS output.\n"));
         exit (1);
     }
+
+    if (format != NULL &&
+        (g_str_equal (format, "ps") || g_str_equal (format, "eps") || g_str_equal (format, "pdf")) &&
+        !no_keep_image_data)
+        keep_image_data = TRUE;
 
     if (zoom != 1.0)
         x_zoom = y_zoom = zoom;
 
     rsvg_set_default_dpi_x_y (dpi_x, dpi_y);
 
+    if (unlimited)
+        flags |= RSVG_HANDLE_FLAG_UNLIMITED;
+
+    if (keep_image_data)
+        flags |= RSVG_HANDLE_FLAG_KEEP_IMAGE_DATA;
+
     for (i = 0; i < n_args; i++) {
+        GFile *file;
+        GInputStream *stream;
 
-        if (using_stdin)
-            rsvg = rsvg_handle_new_from_stdio_file (stdin, &error);
-        else
-            rsvg = rsvg_handle_new_from_file (args[i], &error);
+        if (using_stdin) {
+            file = NULL;
+#ifdef _WIN32
+            handle = GetStdHandle (STD_INPUT_HANDLE);
 
-        if (!rsvg) {
-            fprintf (stderr, _("Error reading SVG:"));
+            if (handle == INVALID_HANDLE_VALUE) {
+              gchar *emsg = g_win32_error_message (GetLastError());
+              g_printerr ( _("Unable to acquire HANDLE for STDIN: %s\n"), emsg);
+              g_free (emsg);
+              exit (1);
+            }
+            stream = g_win32_input_stream_new (handle, FALSE);
+#else
+            stream = g_unix_input_stream_new (STDIN_FILENO, FALSE);
+#endif
+        } else {
+            GFileInfo *file_info;
+            gboolean compressed = FALSE;
+
+            file = g_file_new_for_commandline_arg (args[i]);
+            stream = (GInputStream *) g_file_read (file, NULL, &error);
+
+            if ((file_info = g_file_query_info (file,
+                                                G_FILE_ATTRIBUTE_STANDARD_CONTENT_TYPE,
+                                                G_FILE_QUERY_INFO_NONE,
+                                                NULL,
+                                                NULL))) {
+                const char *content_type;
+                char *gz_content_type;
+
+                content_type = g_file_info_get_content_type (file_info);
+                gz_content_type = g_content_type_from_mime_type ("application/x-gzip");
+                compressed = (content_type != NULL && g_content_type_is_a (content_type, gz_content_type));
+                g_free (gz_content_type);
+                g_object_unref (file_info);
+            }
+
+            if (compressed) {
+                GZlibDecompressor *decompressor;
+                GInputStream *converter_stream;
+
+                decompressor = g_zlib_decompressor_new (G_ZLIB_COMPRESSOR_FORMAT_GZIP);
+                converter_stream = g_converter_input_stream_new (stream, G_CONVERTER (decompressor));
+                g_object_unref (stream);
+                stream = converter_stream;
+            }
+
+            if (stream == NULL)
+                goto done;
+        }
+
+        rsvg = rsvg_handle_new_from_stream_sync (stream, file, flags, NULL, &error);
+
+    done:
+        g_clear_object (&stream);
+        g_clear_object (&file);
+
+        if (error != NULL) {
+            g_printerr (_("Error reading SVG:"));
             display_error (error);
-            fprintf (stderr, "\n");
+            g_printerr ("\n");
             exit (1);
         }
 
-        if (base_uri)
-            rsvg_handle_set_base_uri (rsvg, base_uri);
-
-        /* in the case of multi-page output, all subsequent SVGs are scaled to the first's size */
-        rsvg_handle_set_size_callback (rsvg, rsvg_cairo_size_callback, &dimensions, NULL);
+        export_lookup_id = get_lookup_id_from_command_line (export_id);
+        if (export_lookup_id != NULL
+            && !rsvg_handle_has_sub (rsvg, export_lookup_id)) {
+            g_printerr (_("File %s does not have an object with id \"%s\"\n"), args[i], export_id);
+            exit (1);
+        }
 
         if (i == 0) {
             struct RsvgSizeCallbackData size_data;
 
-            rsvg_handle_get_dimensions (rsvg, &dimensions);
+            if (!rsvg_handle_get_dimensions_sub (rsvg, &dimensions, export_lookup_id))
+                g_printerr ("Could not get dimensions for file %s\n", args[i]);
+
+            unscaled_width = dimensions.width;
+            unscaled_height = dimensions.height;
+
             /* if both are unspecified, assume user wants to zoom the image in at least 1 dimension */
             if (width == -1 && height == -1) {
                 size_data.type = RSVG_SIZE_ZOOM;
                 size_data.x_zoom = x_zoom;
                 size_data.y_zoom = y_zoom;
                 size_data.keep_aspect_ratio = keep_aspect_ratio;
-            }
-            /* if both are unspecified, assume user wants to resize image in at least 1 dimension */
-            else if (x_zoom == 1.0 && y_zoom == 1.0) {
+            } else if (x_zoom == 1.0 && y_zoom == 1.0) {
                 /* if one parameter is unspecified, assume user wants to keep the aspect ratio */
                 if (width == -1 || height == -1) {
                     size_data.type = RSVG_SIZE_WH_MAX;
@@ -282,31 +353,36 @@ main (int argc, char **argv)
                 size_data.keep_aspect_ratio = keep_aspect_ratio;
             }
 
-            _rsvg_size_callback (&dimensions.width, &dimensions.height, &size_data);
+            scaled_width = dimensions.width;
+            scaled_height = dimensions.height;
+            _rsvg_size_callback (&scaled_width, &scaled_height, &size_data);
 
             if (!format || !strcmp (format, "png"))
                 surface = cairo_image_surface_create (CAIRO_FORMAT_ARGB32,
-                                                      dimensions.width, dimensions.height);
+                                                      scaled_width, scaled_height);
 #ifdef CAIRO_HAS_PDF_SURFACE
             else if (!strcmp (format, "pdf"))
                 surface = cairo_pdf_surface_create_for_stream (rsvg_cairo_write_func, output_file,
-                                                               dimensions.width, dimensions.height);
+                                                               scaled_width, scaled_height);
 #endif
 #ifdef CAIRO_HAS_PS_SURFACE
-            else if (!strcmp (format, "ps"))
+            else if (!strcmp (format, "ps") || !strcmp (format, "eps")){
                 surface = cairo_ps_surface_create_for_stream (rsvg_cairo_write_func, output_file,
-                                                              dimensions.width, dimensions.height);
+                                                              scaled_width, scaled_height);
+                if(!strcmp (format, "eps"))
+                    cairo_ps_surface_set_eps(surface, TRUE);
+            }
 #endif
 #ifdef CAIRO_HAS_SVG_SURFACE
             else if (!strcmp (format, "svg"))
                 surface = cairo_svg_surface_create_for_stream (rsvg_cairo_write_func, output_file,
-                                                               dimensions.width, dimensions.height);
+                                                               scaled_width, scaled_height);
 #endif
 #ifdef CAIRO_HAS_XML_SURFACE
             else if (!strcmp (format, "xml")) {
                 cairo_device_t *device = cairo_xml_create_for_stream (rsvg_cairo_write_func, output_file);
                 surface = cairo_xml_surface_create (device, CAIRO_CONTENT_COLOR_ALPHA,
-                                                    dimensions.width, dimensions.height);
+                                                    scaled_width, scaled_height);
                 cairo_device_destroy (device);
             }
 #if CAIRO_VERSION >= CAIRO_VERSION_ENCODE (1, 10, 0)
@@ -315,7 +391,7 @@ main (int argc, char **argv)
 #endif
 #endif
             else {
-                fprintf (stderr, _("Unknown output format."));
+                g_printerr (_("Unknown output format."));
                 exit (1);
             }
 
@@ -331,11 +407,28 @@ main (int argc, char **argv)
                 ((background_color >> 16) & 0xff) / 255.0, 
                 ((background_color >> 8) & 0xff) / 255.0, 
                 ((background_color >> 0) & 0xff) / 255.0);
-            cairo_rectangle (cr, 0, 0, dimensions.width, dimensions.height);
+            cairo_rectangle (cr, 0, 0, scaled_width, scaled_height);
             cairo_fill (cr);
         }
 
-        rsvg_handle_render_cairo (rsvg, cr);
+        if (export_lookup_id) {
+            RsvgPositionData pos;
+
+            if (!rsvg_handle_get_position_sub (rsvg, &pos, export_lookup_id)) {
+                g_printerr (_("File %s does not have an object with id \"%s\"\n"), args[i], export_id);
+                exit (1);
+            }
+
+            /* Move the whole thing to 0, 0 so the object to export is at the origin */
+            cairo_translate (cr, -pos.x, -pos.y);
+        }
+
+        cairo_scale (cr,
+                     scaled_width / unscaled_width,
+                     scaled_height / unscaled_height);
+        rsvg_handle_render_cairo_sub (rsvg, cr, export_lookup_id);
+
+        g_free (export_lookup_id);
 
         if (!format || !strcmp (format, "png"))
             cairo_surface_write_to_png_stream (surface, rsvg_cairo_write_func, output_file);
@@ -348,7 +441,7 @@ main (int argc, char **argv)
 #endif
         else if (!strcmp (format, "xml"))
           ;
-        else if (!strcmp (format, "svg") || !strcmp (format, "pdf") || !strcmp (format, "ps"))
+        else if (!strcmp (format, "svg") || !strcmp (format, "pdf") || !strcmp (format, "ps") || !strcmp (format, "eps"))
             cairo_show_page (cr);
         else
           g_assert_not_reached ();

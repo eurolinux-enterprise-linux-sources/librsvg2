@@ -1,40 +1,28 @@
 Name:           librsvg2
 Summary:        An SVG library based on cairo
-Version:        2.39.0
+Version:        2.40.16
 Release:        1%{?dist}
 
 License:        LGPLv2+
 Group:          System Environment/Libraries
+URL:            https://wiki.gnome.org/Projects/LibRsvg
 #VCS:           git:git://git.gnome.org/librsvg
-Source:         http://download.gnome.org/sources/librsvg/2.39/librsvg-%{version}.tar.xz
+Source:         http://download.gnome.org/sources/librsvg/2.40/librsvg-%{version}.tar.xz
 
-# build with vala 0.18
-Patch0: librsvg-vala.patch
+BuildRequires:  pkgconfig(cairo)
+BuildRequires:  pkgconfig(cairo-png)
+BuildRequires:  pkgconfig(gdk-pixbuf-2.0)
+BuildRequires:  pkgconfig(gio-2.0)
+BuildRequires:  pkgconfig(gobject-introspection-1.0)
+BuildRequires:  pkgconfig(gtk+-3.0)
+BuildRequires:  pkgconfig(libxml-2.0)
+BuildRequires:  pkgconfig(libcroco-0.6)
+BuildRequires:  pkgconfig(pangocairo)
+BuildRequires:  vala-devel
+BuildRequires:  vala
 
 Requires(post):   gdk-pixbuf2
 Requires(postun): gdk-pixbuf2
-BuildRequires:  libpng-devel
-BuildRequires:  glib2-devel
-BuildRequires:  gdk-pixbuf2-devel
-BuildRequires:  gtk3-devel
-BuildRequires:  pango-devel
-BuildRequires:  libxml2-devel
-BuildRequires:  freetype-devel
-BuildRequires:  cairo-devel
-BuildRequires:  cairo-gobject-devel
-BuildRequires:  libgsf-devel
-BuildRequires:  libcroco-devel
-BuildRequires:  libgsf-devel
-BuildRequires:  gobject-introspection-devel
-BuildRequires:  vala-devel
-BuildRequires:  vala-tools
-# grr, librsvg does not install api docs if --disable-gtk-doc
-BuildRequires:  gtk-doc
-BuildRequires:  automake
-BuildRequires:  autoconf
-
-Provides:       librsvg3 = %{name}.%{version}-%{release}
-Obsoletes:      librsvg3 <= 2.26.3-3.fc14
 
 %description
 An SVG library based on cairo.
@@ -43,10 +31,7 @@ An SVG library based on cairo.
 %package devel
 Summary:        Libraries and include files for developing with librsvg
 Group:          Development/Libraries
-Requires:       %{name} = %{version}-%{release}
-
-Provides:       librsvg3-devel = %{name}.%{version}-%{release}
-Obsoletes:      librsvg3-devel <= 2.26.3-3.fc14
+Requires:       %{name}%{?_isa} = %{version}-%{release}
 
 %description devel
 This package provides the necessary development libraries and include
@@ -55,7 +40,7 @@ files to allow you to develop with librsvg.
 
 %package tools
 Summary:        Extra tools for librsvg
-Requires:       %{name} = %{version}-%{release}
+Requires:       %{name}%{?_isa} = %{version}-%{release}
 
 %description tools
 This package provides extra utilities based on the librsvg library.
@@ -63,9 +48,7 @@ This package provides extra utilities based on the librsvg library.
 
 %prep
 %setup -q -n librsvg-%{version}
-%patch0 -p1 -b .vala
 
-autoreconf -i -f
 
 %build
 GDK_PIXBUF_QUERYLOADERS=/usr/bin/gdk-pixbuf-query-loaders-%{__isa_bits}
@@ -75,12 +58,12 @@ enable_pixbuf_loader=yes
 export enable_pixbuf_loader
 %configure --disable-static  \
         --disable-gtk-doc \
-        --disable-gtk-theme \
-        --enable-introspection
+        --enable-introspection \
+        --enable-vala
 make %{?_smp_mflags}
 
 %install
-make install DESTDIR=$RPM_BUILD_ROOT INSTALL="install -p"
+%make_install
 find $RPM_BUILD_ROOT -name '*.la' -exec rm -f {} ';'
 
 rm -f $RPM_BUILD_ROOT%{_libdir}/mozilla/
@@ -97,7 +80,8 @@ gdk-pixbuf-query-loaders-%{__isa_bits} --update-cache || :
 
 
 %files
-%doc AUTHORS COPYING COPYING.LIB NEWS README
+%doc AUTHORS NEWS README
+%license COPYING COPYING.LIB
 %{_libdir}/librsvg-2.so.*
 %{_libdir}/gdk-pixbuf-2.0/*/loaders/libpixbufloader-svg.so
 %{_libdir}/girepository-1.0/*
@@ -119,6 +103,14 @@ gdk-pixbuf-query-loaders-%{__isa_bits} --update-cache || :
 
 
 %changelog
+* Thu Jun 09 2016 Kalev Lember <klember@redhat.com> - 2.40.16-1
+- Update to 2.40.16
+- Resolves: #1387017
+
+* Wed Aug  5 2015 Debarshi Ray <rishi@fedoraproject.org> - 2.39.0-2
+- Fix cairo_t/surface leaks on gaussian filters
+- Resolves: #1250445
+
 * Fri Jan 24 2014 Daniel Mach <dmach@redhat.com> - 2.39.0-1
 - Mass rebuild 2014-01-24
 

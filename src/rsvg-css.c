@@ -204,6 +204,7 @@ _rsvg_css_parse_length (const char *str)
     return out;
 }
 
+/* Recursive evaluation of all parent elements regarding absolute font size */
 double
 _rsvg_css_normalize_font_size (RsvgState * state, RsvgDrawingCtx * ctx)
 {
@@ -213,7 +214,7 @@ _rsvg_css_normalize_font_size (RsvgState * state, RsvgDrawingCtx * ctx)
     case 'p':
     case 'm':
     case 'x':
-        parent= rsvg_state_parent (state);
+        parent = rsvg_state_parent (state);
         if (parent) {
             double parent_size;
             parent_size = _rsvg_css_normalize_font_size (parent, ctx);
@@ -263,6 +264,27 @@ _rsvg_css_normalize_length (const RsvgLength * in, RsvgDrawingCtx * ctx, char di
     return 0;
 }
 
+/* Recursive evaluation of all parent elements regarding basline-shift */
+double
+_rsvg_css_accumulate_baseline_shift (RsvgState * state, RsvgDrawingCtx * ctx)
+{
+    RsvgState *parent;
+    double shift = 0.;
+
+    parent = rsvg_state_parent (state);
+    if (parent) {
+        if (state->has_baseline_shift) {
+            double parent_font_size;
+            parent_font_size = _rsvg_css_normalize_font_size (parent, ctx); /* font size from here */
+            shift = parent_font_size * state->baseline_shift;
+        }
+        shift += _rsvg_css_accumulate_baseline_shift (parent, ctx); /* baseline-shift for parent element */
+    }
+
+    return shift;
+}
+
+
 double
 _rsvg_css_hand_normalize_length (const RsvgLength * in, gdouble pixels_per_inch,
                                  gdouble width_or_height, gdouble font_size)
@@ -282,29 +304,26 @@ _rsvg_css_hand_normalize_length (const RsvgLength * in, gdouble pixels_per_inch,
 }
 
 static gint
-rsvg_css_clip_rgb_percent (gdouble in_percent)
+rsvg_css_clip_rgb_percent (const char *s, double max)
 {
-    /* spec says to clip these values */
-    if (in_percent > 100.)
-        return 255;
-    else if (in_percent <= 0.)
-        return 0;
-    return (gint) floor (255. * in_percent / 100. + 0.5);
-}
+    double value;
+    char *end;
 
-static gint
-rsvg_css_clip_rgb (gint rgb)
-{
-    /* spec says to clip these values */
-    if (rgb > 255)
-        return 255;
-    else if (rgb < 0)
-        return 0;
-    return rgb;
+    value = g_ascii_strtod (s, &end);
+
+    if (*end == '%') {
+        value = CLAMP (value, 0, 100) / 100.0;
+    }
+    else {
+        value = CLAMP (value, 0, max) / max;
+    }
+    
+    return (gint) floor (value * 255 + 0.5);
 }
 
 /* pack 3 [0,255] ints into one 32 bit one */
-#define PACK_RGB(r,g,b) (((r) << 16) | ((g) << 8) | (b))
+#define PACK_RGBA(r,g,b,a) (((a) << 24) | ((r) << 16) | ((g) << 8) | (b))
+#define PACK_RGB(r,g,b) PACK_RGBA(r, g, b, 255)
 
 /**
  * rsvg_css_parse_color:
@@ -341,43 +360,50 @@ rsvg_css_parse_color (const char *str, gboolean * inherit)
             val = ((val & 0xf00) << 8) | ((val & 0x0f0) << 4) | (val & 0x00f);
             val |= val << 4;
         }
+
+        val |= 0xff000000; /* opaque */
     }
-    /* i want to use g_str_has_prefix but it isn't in my gstrfuncs.h?? */
-    else if (strstr (str, "rgb") != NULL) {
-        gint r, g, b;
+    else if (g_str_has_prefix (str, "rgb")) {
+        gint r, g, b, a;
+        gboolean has_alpha;
+        guint nb_toks;
+        char **toks;
+
         r = g = b = 0;
+        a = 255;
 
-        if (strstr (str, "%") != 0) {
-            guint i, nb_toks;
-            char **toks;
-
-            /* assume rgb (9%, 100%, 23%) */
-            for (i = 0; str[i] != '('; i++);
-
-            i++;
-
-            toks = rsvg_css_parse_list (str + i, &nb_toks);
-
-            if (toks) {
-                if (nb_toks == 3) {
-                    r = rsvg_css_clip_rgb_percent (g_ascii_strtod (toks[0], NULL));
-                    g = rsvg_css_clip_rgb_percent (g_ascii_strtod (toks[1], NULL));
-                    b = rsvg_css_clip_rgb_percent (g_ascii_strtod (toks[2], NULL));
-                }
-
-                g_strfreev (toks);
-            }
-        } else {
-            /* assume "rgb (r, g, b)" */
-            if (3 == sscanf (str, " rgb ( %d , %d , %d ) ", &r, &g, &b)) {
-                r = rsvg_css_clip_rgb (r);
-                g = rsvg_css_clip_rgb (g);
-                b = rsvg_css_clip_rgb (b);
-            } else
-                r = g = b = 0;
+        if (str[3] == 'a') {
+            /* "rgba" */
+            has_alpha = TRUE;
+            str += 4;
+        }
+        else {
+            /* "rgb" */
+            has_alpha = FALSE;
+            str += 3;
         }
 
-        val = PACK_RGB (r, g, b);
+        str = strchr (str, '(');
+        if (str == NULL)
+          return val;
+
+        toks = rsvg_css_parse_list (str + 1, &nb_toks);
+
+        if (toks) {
+            if (nb_toks == (has_alpha ? 4 : 3)) {
+                r = rsvg_css_clip_rgb_percent (toks[0], 255.0);
+                g = rsvg_css_clip_rgb_percent (toks[1], 255.0);
+                b = rsvg_css_clip_rgb_percent (toks[2], 255.0);
+                if (has_alpha)
+                    a = rsvg_css_clip_rgb_percent (toks[3], 1.0);
+                else
+                    a = 255;
+            }
+
+            g_strfreev (toks);
+        }
+
+        val = PACK_RGBA (r, g, b, a);
     } else if (!strcmp (str, "inherit"))
         UNSETINHERIT ();
     else {
@@ -386,9 +412,9 @@ rsvg_css_parse_color (const char *str, gboolean * inherit)
         if (cr_rgb_set_from_name (&rgb, (const guchar *) str) == CR_OK) {
             val = PACK_RGB (rgb.red, rgb.green, rgb.blue);
         } else {
-            /* default to black on failed lookup */
+            /* default to opaque black on failed lookup */
             UNSETINHERIT ();
-            val = 0;
+            val = PACK_RGB (0, 0, 0);
         }
     }
 
@@ -396,6 +422,7 @@ rsvg_css_parse_color (const char *str, gboolean * inherit)
 }
 
 #undef PACK_RGB
+#undef PACK_RGBA
 
 guint
 rsvg_css_parse_opacity (const char *str)
@@ -514,7 +541,9 @@ rsvg_css_parse_font_style (const char *str, gboolean * inherit)
             return PANGO_STYLE_OBLIQUE;
         if (!strcmp (str, "italic"))
             return PANGO_STYLE_ITALIC;
-        else if (!strcmp (str, "inherit")) {
+        if (!strcmp (str, "normal"))
+            return PANGO_STYLE_NORMAL;
+        if (!strcmp (str, "inherit")) {
             UNSETINHERIT ();
             return PANGO_STYLE_NORMAL;
         }
@@ -843,7 +872,7 @@ rsvg_css_parse_xml_attribute_string (const char *attribute_string)
 
     if ((doc = parser->myDoc) == NULL ||
         (node = doc->children) == NULL ||
-        strcmp (node->name, "rsvg-hack") != 0 ||
+        strcmp ((const char *) node->name, "rsvg-hack") != 0 ||
         node->next != NULL ||
         node->properties == NULL)
           goto done;

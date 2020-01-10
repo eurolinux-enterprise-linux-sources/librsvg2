@@ -147,14 +147,13 @@ rsvg_cairo_new_drawing_ctx (cairo_t * cr, RsvgHandle * handle)
     draw->state = NULL;
 
     draw->defs = handle->priv->defs;
-    draw->base_uri = g_strdup (handle->priv->base_uri);
     draw->dpi_x = handle->priv->dpi_x;
     draw->dpi_y = handle->priv->dpi_y;
     draw->vb.rect.width = data.em;
     draw->vb.rect.height = data.ex;
     draw->pango_context = NULL;
     draw->drawsub_stack = NULL;
-    draw->ptrs = NULL;
+    draw->acquired_nodes = NULL;
 
     rsvg_state_push (draw);
     state = rsvg_current_state (draw);
@@ -179,11 +178,11 @@ rsvg_cairo_new_drawing_ctx (cairo_t * cr, RsvgHandle * handle)
 
 /**
  * rsvg_handle_render_cairo_sub:
- * @handle: A RsvgHandle
+ * @handle: A #RsvgHandle
  * @cr: A Cairo renderer
- * @id: An element's id within the SVG, or %NULL to render the whole SVG. For
- * example, if you have a layer called "layer1" that you wish to render, pass 
- * "##layer1" as the id.
+ * @id: (nullable): An element's id within the SVG, or %NULL to render
+ *   the whole SVG. For example, if you have a layer called "layer1"
+ *   that you wish to render, pass "##layer1" as the id.
  *
  * Draws a subset of a SVG to a Cairo surface
  *
@@ -206,8 +205,8 @@ rsvg_handle_render_cairo_sub (RsvgHandle * handle, cairo_t * cr, const char *id)
         drawsub = rsvg_defs_lookup (handle->priv->defs, id);
 
     if (drawsub == NULL && id != NULL) {
-	/* todo: there's no way to signal that @id doesn't exist */
-	return FALSE;
+        /* todo: there's no way to signal that @id doesn't exist */
+        return FALSE;
     }
 
     draw = rsvg_cairo_new_drawing_ctx (cr, handle);
@@ -233,7 +232,7 @@ rsvg_handle_render_cairo_sub (RsvgHandle * handle, cairo_t * cr, const char *id)
 
 /**
  * rsvg_handle_render_cairo:
- * @handle: A RsvgHandle
+ * @handle: A #RsvgHandle
  * @cr: A Cairo renderer
  *
  * Draws a SVG to a Cairo surface
