@@ -3,6 +3,9 @@
   <ImportGroup Label="PropertySheets">
   </ImportGroup>
   <PropertyGroup Label="UserMacros">
+    <RsvgMajorVersion>2</RsvgMajorVersion>
+    <RsvgMinorVersion>40</RsvgMinorVersion>
+    <RsvgMicroVersion>20</RsvgMicroVersion>
     <ApiVersion>2.0</ApiVersion>
     <VSVer>12</VSVer>
     <GlibEtcInstallRoot>$(SolutionDir)\..\..\..\..\vs$(VSVer)\$(Platform)</GlibEtcInstallRoot>
@@ -14,12 +17,29 @@
     <RsvgSeparateVSDllSuffix>-$(ApiVersion)-vs$(VSVer)</RsvgSeparateVSDllSuffix>
     <RsvgDllPrefix>$(RsvgSeparateVSDllPrefix)</RsvgDllPrefix>
     <RsvgDllSuffix>$(RsvgSeparateVSDllSuffix)</RsvgDllSuffix>
+    <PythonDir Condition="'$(VisualStudioVersion)' == '10.0'">c:\python34</PythonDir>
+    <PythonDir Condition="'$(VisualStudioVersion)' == '11.0'">c:\python34</PythonDir>
+    <PythonDir Condition="'$(VisualStudioVersion)' == '12.0'">c:\python34</PythonDir>
+    <PythonDir Condition="'$(VisualStudioVersion)' == '14.0'">c:\python36</PythonDir>
+    <PythonDir Condition="'$(VisualStudioVersion)' == '15.0'">c:\python36</PythonDir>
+    <PythonDirX64>$(PythonDir).x64</PythonDirX64>
+    <IntrospectPythonParam>PYTHON=$(PythonDir)\python.exe</IntrospectPythonParam>
+    <IntrospectPythonParamX64>PYTHON=$(PythonDirX64)\python.exe</IntrospectPythonParamX64>
   </PropertyGroup>
   <PropertyGroup>
     <_PropertySheetDisplayName>rsvgversionpathsprops</_PropertySheetDisplayName>
   </PropertyGroup>
   <ItemDefinitionGroup />
   <ItemGroup>
+    <BuildMacro Include="RsvgMajorVersion">
+      <Value>$(RsvgMajorVersion)</Value>
+    </BuildMacro>
+    <BuildMacro Include="RsvgMinorVersion">
+      <Value>$(RsvgMinorVersion)</Value>
+    </BuildMacro>
+    <BuildMacro Include="RsvgMicroVersion">
+      <Value>$(RsvgMicroVersion)</Value>
+    </BuildMacro>
     <BuildMacro Include="ApiVersion">
       <Value>$(ApiVersion)</Value>
     </BuildMacro>
@@ -52,6 +72,18 @@
     </BuildMacro>
     <BuildMacro Include="RsvgDllSuffix">
       <Value>$(RsvgDllSuffix)</Value>
+    </BuildMacro>
+    <BuildMacro Include="PythonDir">
+      <Value>$(PythonDir)</Value>
+    </BuildMacro>
+    <BuildMacro Include="PythonDirX64">
+      <Value>$(PythonDirX64)</Value>
+    </BuildMacro>
+    <BuildMacro Include="IntrospectPythonParam">
+      <Value>$(IntrospectPythonParam)</Value>
+    </BuildMacro>
+    <BuildMacro Include="IntrospectPythonParamX64">
+      <Value>$(IntrospectPythonParamX64)</Value>
     </BuildMacro>
   </ItemGroup>
 </Project>

@@ -676,7 +676,6 @@ rsvg_filter_get_bg (RsvgFilterContext * ctx)
     return ctx->bg_surface;
 }
 
-/* FIXMEchpe: proper return value and out param! */
 /**
  * rsvg_filter_get_result:
  * @name: The name of the surface
@@ -722,24 +721,21 @@ rsvg_filter_get_result (GString * name, RsvgFilterContext * ctx)
         return output;
     }
 
-    /* g_warning (_("%s not found\n"), name->str); */
-
-    output = ctx->lastresult;
-    cairo_surface_reference (output.surface);
+    output.surface = NULL;
     return output;
 }
 
-/**
- * rsvg_filter_get_in:
- * @name:
- * @ctx:
- * 
- * Returns: (transfer full) (nullable): a new #cairo_surface_t, or %NULL
- */
 static cairo_surface_t *
 rsvg_filter_get_in (GString * name, RsvgFilterContext * ctx)
 {
-    return rsvg_filter_get_result (name, ctx).surface;
+    cairo_surface_t *surface;
+
+    surface = rsvg_filter_get_result (name, ctx).surface;
+    if (surface == NULL || cairo_surface_status (surface) != CAIRO_STATUS_SUCCESS) {
+        return NULL;
+    }
+
+    return surface;
 }
 
 static void
@@ -1331,7 +1327,9 @@ box_blur_line (gint box_width, gint even_offset,
                       kernel; it's the pixel to remove from the accumulator. */
     gint  *ac;     /* Accumulator for each channel                           */
 
-    ac = g_new (gint, bpp);
+    g_assert (box_width > 0);
+
+    ac = g_new0 (gint, bpp);
 
     /* The algorithm differs for even and odd-sized kernels.
      * With the output at the center,
@@ -1688,7 +1686,6 @@ gaussian_blur_surface (cairo_surface_t *in,
                        gdouble sx,
                        gdouble sy)
 {
-    gboolean use_box_blur;
     gint width, height;
     cairo_format_t in_format, out_format;
     gint in_stride;
@@ -1732,14 +1729,6 @@ gaussian_blur_surface (cairo_surface_t *in,
     if (sy < 0.0)
         sy = 0.0;
 
-    /* For small radiuses, use a true gaussian kernel; otherwise use three box blurs with
-     * clever offsets.
-     */
-    if (sx < 10.0 && sy < 10.0)
-        use_box_blur = FALSE;
-    else
-        use_box_blur = TRUE;
-
     /* Bail out by just copying? */
     if ((sx == 0.0 && sy == 0.0)
         || sx > 1000 || sy > 1000) {
@@ -1759,6 +1748,15 @@ gaussian_blur_surface (cairo_surface_t *in,
         int y;
         guchar *row_buffer = NULL;
         guchar *row1, *row2;
+        gboolean use_box_blur;
+
+        /* For small radiuses, use a true gaussian kernel; otherwise use three box blurs with
+         * clever offsets.
+         */
+        if (sx < 10.0)
+            use_box_blur = FALSE;
+        else
+            use_box_blur = TRUE;
 
         if (use_box_blur) {
             box_width = compute_box_blur_width (sx);
@@ -1814,6 +1812,15 @@ gaussian_blur_surface (cairo_surface_t *in,
         guchar *col_buffer;
         guchar *col1, *col2;
         int x;
+        gboolean use_box_blur;
+
+        /* For small radiuses, use a true gaussian kernel; otherwise use three box blurs with
+         * clever offsets.
+         */
+        if (sy < 10.0)
+            use_box_blur = FALSE;
+        else
+            use_box_blur = TRUE;
 
         /* twice the size so we can have the source pixels and the blurred pixels */
         col_buffer = g_new (guchar, height * bpp * 2);
@@ -1863,15 +1870,17 @@ rsvg_filter_primitive_gaussian_blur_render (RsvgFilterPrimitive * self, RsvgFilt
     int width, height;
     cairo_surface_t *output, *in;
     RsvgIRect boundarys;
-    gfloat sdx, sdy;
+    gdouble sdx, sdy;
     RsvgFilterPrimitiveOutput op;
     cairo_t *cr;
 
     upself = (RsvgFilterPrimitiveGaussianBlur *) self;
     boundarys = rsvg_filter_primitive_get_bounds (self, ctx);
 
-    op = rsvg_filter_get_result (self->in, ctx);
-    in = op.surface;
+    in = rsvg_filter_get_in (self->in, ctx);
+    if (in == NULL) {
+        return;
+    }
 
     width = cairo_image_surface_get_width (in);
     height = cairo_image_surface_get_height (in);
@@ -1884,8 +1893,8 @@ rsvg_filter_primitive_gaussian_blur_render (RsvgFilterPrimitive * self, RsvgFilt
     }
 
     /* scale the SD values */
-    sdx = upself->sdx * ctx->paffine.xx;
-    sdy = upself->sdy * ctx->paffine.yy;
+    sdx = fabs (upself->sdx * ctx->paffine.xx);
+    sdy = fabs (upself->sdy * ctx->paffine.yy);
 
     gaussian_blur_surface (in, output, sdx, sdy);
 
@@ -4853,7 +4862,16 @@ rsvg_filter_primitive_tile_render (RsvgFilterPrimitive * self, RsvgFilterContext
 
     input = rsvg_filter_get_result (self->in, ctx);
     in = input.surface;
+    if (in == NULL) {
+        return;
+    }
+
     boundarys = input.bounds;
+
+    if ((boundarys.x0 >= boundarys.x1) || (boundarys.y0 >= boundarys.y1)) {
+        cairo_surface_destroy (in);
+        return;
+    }
 
     cairo_surface_flush (in);
 

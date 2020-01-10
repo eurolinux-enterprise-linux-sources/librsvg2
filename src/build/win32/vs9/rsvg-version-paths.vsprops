@@ -5,6 +5,18 @@
 	Name="rsvgversionpathsprops"
 	>
 	<UserMacro
+		Name="RsvgMajorVersion"
+		Value="2"
+	/>
+	<UserMacro
+		Name="RsvgMinorVersion"
+		Value="40"
+	/>
+	<UserMacro
+		Name="RsvgMicroVersion"
+		Value="20"
+	/>
+	<UserMacro
 		Name="ApiVersion"
 		Value="2.0"
 	/>
@@ -49,5 +61,21 @@
 	<UserMacro
 		Name="RsvgDllSuffix"
 		Value="$(RsvgSeparateVSDllSuffix)"
+	/>
+	<UserMacro
+		Name="PythonDir"
+		Value="c:\python27"
+	/>
+	<UserMacro
+		Name="PythonDirX64"
+		Value="$(PythonDir).x64"
+	/>
+	<UserMacro
+		Name="IntrospectPythonParam"
+		Value="PYTHON=$(PythonDir)\python.exe"
+	/>
+	<UserMacro
+		Name="IntrospectPythonParamX64"
+		Value="PYTHON=$(PythonDirX64)\python.exe"
 	/>
 </VisualStudioPropertySheet>
