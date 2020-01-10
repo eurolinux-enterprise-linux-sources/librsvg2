@@ -3,12 +3,12 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <title>Using RSVG with GdkPixbuf</title>
-<meta name="generator" content="DocBook XSL Stylesheets V1.78.0">
+<meta name="generator" content="DocBook XSL Stylesheets V1.78.1">
 <link rel="home" href="index.html" title="RSVG Libary Reference Manual">
 <link rel="up" href="rsvg.html" title="Part I. API Reference">
 <link rel="prev" href="rsvg-Using-RSVG-with-cairo.html" title="Using RSVG with cairo">
 <link rel="next" href="rsvg-Version-check-and-feature-tests.html" title="Version check and feature tests">
-<meta name="generator" content="GTK-Doc V1.18.1 (XML mode)">
+<meta name="generator" content="GTK-Doc V1.19 (XML mode)">
 <link rel="stylesheet" href="style.css" type="text/css">
 </head>
 <body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
@@ -38,24 +38,24 @@
 </tr></table></div>
 <div class="refsynopsisdiv">
 <a name="rsvg-Using-RSVG-with-GdkPixbuf.synopsis"></a><h2>Synopsis</h2>
-<pre class="synopsis"><a href="http://library.gnome.org/devel/gdk-pixbuf/unstable/gdk-pixbuf-The-GdkPixbuf-Structure.html#GdkPixbuf"><span class="returnvalue">GdkPixbuf</span></a> *         <a class="link" href="rsvg-Using-RSVG-with-GdkPixbuf.html#rsvg-handle-get-pixbuf" title="rsvg_handle_get_pixbuf ()">rsvg_handle_get_pixbuf</a>              (<em class="parameter"><code><a class="link" href="RsvgHandle.html" title="RsvgHandle"><span class="type">RsvgHandle</span></a> *handle</code></em>);
-<a href="http://library.gnome.org/devel/gdk-pixbuf/unstable/gdk-pixbuf-The-GdkPixbuf-Structure.html#GdkPixbuf"><span class="returnvalue">GdkPixbuf</span></a> *         <a class="link" href="rsvg-Using-RSVG-with-GdkPixbuf.html#rsvg-handle-get-pixbuf-sub" title="rsvg_handle_get_pixbuf_sub ()">rsvg_handle_get_pixbuf_sub</a>          (<em class="parameter"><code><a class="link" href="RsvgHandle.html" title="RsvgHandle"><span class="type">RsvgHandle</span></a> *handle</code></em>,
+<pre class="synopsis"><a href="/usr/share/gtk-doc/html/gdk-pixbuf/gdk-pixbuf-The-GdkPixbuf-Structure.html#GdkPixbuf"><span class="returnvalue">GdkPixbuf</span></a> *         <a class="link" href="rsvg-Using-RSVG-with-GdkPixbuf.html#rsvg-handle-get-pixbuf" title="rsvg_handle_get_pixbuf ()">rsvg_handle_get_pixbuf</a>              (<em class="parameter"><code><a class="link" href="RsvgHandle.html" title="RsvgHandle"><span class="type">RsvgHandle</span></a> *handle</code></em>);
+<a href="/usr/share/gtk-doc/html/gdk-pixbuf/gdk-pixbuf-The-GdkPixbuf-Structure.html#GdkPixbuf"><span class="returnvalue">GdkPixbuf</span></a> *         <a class="link" href="rsvg-Using-RSVG-with-GdkPixbuf.html#rsvg-handle-get-pixbuf-sub" title="rsvg_handle_get_pixbuf_sub ()">rsvg_handle_get_pixbuf_sub</a>          (<em class="parameter"><code><a class="link" href="RsvgHandle.html" title="RsvgHandle"><span class="type">RsvgHandle</span></a> *handle</code></em>,
                                                          <em class="parameter"><code>const <span class="type">char</span> *id</code></em>);
-<a href="http://library.gnome.org/devel/gdk-pixbuf/unstable/gdk-pixbuf-The-GdkPixbuf-Structure.html#GdkPixbuf"><span class="returnvalue">GdkPixbuf</span></a> *         <a class="link" href="rsvg-Using-RSVG-with-GdkPixbuf.html#rsvg-pixbuf-from-file" title="rsvg_pixbuf_from_file ()">rsvg_pixbuf_from_file</a>               (<em class="parameter"><code>const <span class="type">gchar</span> *file_name</code></em>,
+<a href="/usr/share/gtk-doc/html/gdk-pixbuf/gdk-pixbuf-The-GdkPixbuf-Structure.html#GdkPixbuf"><span class="returnvalue">GdkPixbuf</span></a> *         <a class="link" href="rsvg-Using-RSVG-with-GdkPixbuf.html#rsvg-pixbuf-from-file" title="rsvg_pixbuf_from_file ()">rsvg_pixbuf_from_file</a>               (<em class="parameter"><code>const <span class="type">gchar</span> *file_name</code></em>,
                                                          <em class="parameter"><code><span class="type">GError</span> **error</code></em>);
-<a href="http://library.gnome.org/devel/gdk-pixbuf/unstable/gdk-pixbuf-The-GdkPixbuf-Structure.html#GdkPixbuf"><span class="returnvalue">GdkPixbuf</span></a> *         <a class="link" href="rsvg-Using-RSVG-with-GdkPixbuf.html#rsvg-pixbuf-from-file-at-zoom" title="rsvg_pixbuf_from_file_at_zoom ()">rsvg_pixbuf_from_file_at_zoom</a>       (<em class="parameter"><code>const <span class="type">gchar</span> *file_name</code></em>,
+<a href="/usr/share/gtk-doc/html/gdk-pixbuf/gdk-pixbuf-The-GdkPixbuf-Structure.html#GdkPixbuf"><span class="returnvalue">GdkPixbuf</span></a> *         <a class="link" href="rsvg-Using-RSVG-with-GdkPixbuf.html#rsvg-pixbuf-from-file-at-zoom" title="rsvg_pixbuf_from_file_at_zoom ()">rsvg_pixbuf_from_file_at_zoom</a>       (<em class="parameter"><code>const <span class="type">gchar</span> *file_name</code></em>,
                                                          <em class="parameter"><code><span class="type">double</span> x_zoom</code></em>,
                                                          <em class="parameter"><code><span class="type">double</span> y_zoom</code></em>,
                                                          <em class="parameter"><code><span class="type">GError</span> **error</code></em>);
-<a href="http://library.gnome.org/devel/gdk-pixbuf/unstable/gdk-pixbuf-The-GdkPixbuf-Structure.html#GdkPixbuf"><span class="returnvalue">GdkPixbuf</span></a> *         <a class="link" href="rsvg-Using-RSVG-with-GdkPixbuf.html#rsvg-pixbuf-from-file-at-size" title="rsvg_pixbuf_from_file_at_size ()">rsvg_pixbuf_from_file_at_size</a>       (<em class="parameter"><code>const <span class="type">gchar</span> *file_name</code></em>,
+<a href="/usr/share/gtk-doc/html/gdk-pixbuf/gdk-pixbuf-The-GdkPixbuf-Structure.html#GdkPixbuf"><span class="returnvalue">GdkPixbuf</span></a> *         <a class="link" href="rsvg-Using-RSVG-with-GdkPixbuf.html#rsvg-pixbuf-from-file-at-size" title="rsvg_pixbuf_from_file_at_size ()">rsvg_pixbuf_from_file_at_size</a>       (<em class="parameter"><code>const <span class="type">gchar</span> *file_name</code></em>,
                                                          <em class="parameter"><code><span class="type">gint</span> width</code></em>,
                                                          <em class="parameter"><code><span class="type">gint</span> height</code></em>,
                                                          <em class="parameter"><code><span class="type">GError</span> **error</code></em>);
-<a href="http://library.gnome.org/devel/gdk-pixbuf/unstable/gdk-pixbuf-The-GdkPixbuf-Structure.html#GdkPixbuf"><span class="returnvalue">GdkPixbuf</span></a> *         <a class="link" href="rsvg-Using-RSVG-with-GdkPixbuf.html#rsvg-pixbuf-from-file-at-max-size" title="rsvg_pixbuf_from_file_at_max_size ()">rsvg_pixbuf_from_file_at_max_size</a>   (<em class="parameter"><code>const <span class="type">gchar</span> *file_name</code></em>,
+<a href="/usr/share/gtk-doc/html/gdk-pixbuf/gdk-pixbuf-The-GdkPixbuf-Structure.html#GdkPixbuf"><span class="returnvalue">GdkPixbuf</span></a> *         <a class="link" href="rsvg-Using-RSVG-with-GdkPixbuf.html#rsvg-pixbuf-from-file-at-max-size" title="rsvg_pixbuf_from_file_at_max_size ()">rsvg_pixbuf_from_file_at_max_size</a>   (<em class="parameter"><code>const <span class="type">gchar</span> *file_name</code></em>,
                                                          <em class="parameter"><code><span class="type">gint</span> max_width</code></em>,
                                                          <em class="parameter"><code><span class="type">gint</span> max_height</code></em>,
                                                          <em class="parameter"><code><span class="type">GError</span> **error</code></em>);
-<a href="http://library.gnome.org/devel/gdk-pixbuf/unstable/gdk-pixbuf-The-GdkPixbuf-Structure.html#GdkPixbuf"><span class="returnvalue">GdkPixbuf</span></a> *         <a class="link" href="rsvg-Using-RSVG-with-GdkPixbuf.html#rsvg-pixbuf-from-file-at-zoom-with-max" title="rsvg_pixbuf_from_file_at_zoom_with_max ()">rsvg_pixbuf_from_file_at_zoom_with_max</a>
+<a href="/usr/share/gtk-doc/html/gdk-pixbuf/gdk-pixbuf-The-GdkPixbuf-Structure.html#GdkPixbuf"><span class="returnvalue">GdkPixbuf</span></a> *         <a class="link" href="rsvg-Using-RSVG-with-GdkPixbuf.html#rsvg-pixbuf-from-file-at-zoom-with-max" title="rsvg_pixbuf_from_file_at_zoom_with_max ()">rsvg_pixbuf_from_file_at_zoom_with_max</a>
                                                         (<em class="parameter"><code>const <span class="type">gchar</span> *file_name</code></em>,
                                                          <em class="parameter"><code><span class="type">double</span> x_zoom</code></em>,
                                                          <em class="parameter"><code><span class="type">double</span> y_zoom</code></em>,
@@ -75,11 +75,11 @@ cross-platform GTK+ widget toolkit.
 <a name="rsvg-Using-RSVG-with-GdkPixbuf.details"></a><h2>Details</h2>
 <div class="refsect2">
 <a name="rsvg-handle-get-pixbuf"></a><h3>rsvg_handle_get_pixbuf ()</h3>
-<pre class="programlisting"><a href="http://library.gnome.org/devel/gdk-pixbuf/unstable/gdk-pixbuf-The-GdkPixbuf-Structure.html#GdkPixbuf"><span class="returnvalue">GdkPixbuf</span></a> *         rsvg_handle_get_pixbuf              (<em class="parameter"><code><a class="link" href="RsvgHandle.html" title="RsvgHandle"><span class="type">RsvgHandle</span></a> *handle</code></em>);</pre>
+<pre class="programlisting"><a href="/usr/share/gtk-doc/html/gdk-pixbuf/gdk-pixbuf-The-GdkPixbuf-Structure.html#GdkPixbuf"><span class="returnvalue">GdkPixbuf</span></a> *         rsvg_handle_get_pixbuf              (<em class="parameter"><code><a class="link" href="RsvgHandle.html" title="RsvgHandle"><span class="type">RsvgHandle</span></a> *handle</code></em>);</pre>
 <p>
 Returns the pixbuf loaded by <span class="type">handle</span>.  The pixbuf returned will be reffed, so
 the caller of this function must assume that ref.  If insufficient data has
-been read to create the pixbuf, or an error occurred in loading, then <a href="/home/mclasen/gnome/share/gtk-doc/html/liboil/liboil-liboiljunk.html#NULL--CAPS"><code class="literal">NULL</code></a>
+been read to create the pixbuf, or an error occurred in loading, then <code class="literal">NULL</code>
 will be returned.  Note that the pixbuf may not be complete until
 <em class="parameter"><code>rsvg_handle_close</code></em> has been called.
 </p>
@@ -96,7 +96,7 @@ will be returned.  Note that the pixbuf may not be complete until
 </tr>
 <tr>
 <td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
-<td>the pixbuf loaded by <span class="type">handle</span>, or <a href="/home/mclasen/gnome/share/gtk-doc/html/liboil/liboil-liboiljunk.html#NULL--CAPS"><code class="literal">NULL</code></a>. <span class="annotation">[<acronym title="Free data after the code is done."><span class="acronym">transfer full</span></acronym>]</span>
+<td>the pixbuf loaded by <span class="type">handle</span>, or <code class="literal">NULL</code>. <span class="annotation">[<acronym title="Free data after the code is done."><span class="acronym">transfer full</span></acronym>]</span>
 </td>
 </tr>
 </tbody>
@@ -105,12 +105,12 @@ will be returned.  Note that the pixbuf may not be complete until
 <hr>
 <div class="refsect2">
 <a name="rsvg-handle-get-pixbuf-sub"></a><h3>rsvg_handle_get_pixbuf_sub ()</h3>
-<pre class="programlisting"><a href="http://library.gnome.org/devel/gdk-pixbuf/unstable/gdk-pixbuf-The-GdkPixbuf-Structure.html#GdkPixbuf"><span class="returnvalue">GdkPixbuf</span></a> *         rsvg_handle_get_pixbuf_sub          (<em class="parameter"><code><a class="link" href="RsvgHandle.html" title="RsvgHandle"><span class="type">RsvgHandle</span></a> *handle</code></em>,
+<pre class="programlisting"><a href="/usr/share/gtk-doc/html/gdk-pixbuf/gdk-pixbuf-The-GdkPixbuf-Structure.html#GdkPixbuf"><span class="returnvalue">GdkPixbuf</span></a> *         rsvg_handle_get_pixbuf_sub          (<em class="parameter"><code><a class="link" href="RsvgHandle.html" title="RsvgHandle"><span class="type">RsvgHandle</span></a> *handle</code></em>,
                                                          <em class="parameter"><code>const <span class="type">char</span> *id</code></em>);</pre>
 <p>
 Returns the pixbuf loaded by <span class="type">handle</span>.  The pixbuf returned will be reffed, so
 the caller of this function must assume that ref.  If insufficient data has
-been read to create the pixbuf, or an error occurred in loading, then <a href="/home/mclasen/gnome/share/gtk-doc/html/liboil/liboil-liboiljunk.html#NULL--CAPS"><code class="literal">NULL</code></a>
+been read to create the pixbuf, or an error occurred in loading, then <code class="literal">NULL</code>
 will be returned.  Note that the pixbuf may not be complete until
 <em class="parameter"><code>rsvg_handle_close</code></em> has been called.
 </p>
@@ -127,13 +127,13 @@ will be returned.  Note that the pixbuf may not be complete until
 </tr>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>id</code></em> :</span></p></td>
-<td>The id of an element inside the SVG, or <a href="/home/mclasen/gnome/share/gtk-doc/html/liboil/liboil-liboiljunk.html#NULL--CAPS"><code class="literal">NULL</code></a> to render the whole SVG. For
+<td>The id of an element inside the SVG, or <code class="literal">NULL</code> to render the whole SVG. For
 example, if you have a layer called "layer1" that you wish to render, pass
 "#<span class="type">layer1</span>" as the id.</td>
 </tr>
 <tr>
 <td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
-<td>the pixbuf loaded by <span class="type">handle</span>, or <a href="/home/mclasen/gnome/share/gtk-doc/html/liboil/liboil-liboiljunk.html#NULL--CAPS"><code class="literal">NULL</code></a>. <span class="annotation">[<acronym title="Free data after the code is done."><span class="acronym">transfer full</span></acronym>]</span>
+<td>the pixbuf loaded by <span class="type">handle</span>, or <code class="literal">NULL</code>. <span class="annotation">[<acronym title="Free data after the code is done."><span class="acronym">transfer full</span></acronym>]</span>
 </td>
 </tr>
 </tbody>
@@ -143,16 +143,16 @@ example, if you have a layer called "layer1" that you wish to render, pass
 <hr>
 <div class="refsect2">
 <a name="rsvg-pixbuf-from-file"></a><h3>rsvg_pixbuf_from_file ()</h3>
-<pre class="programlisting"><a href="http://library.gnome.org/devel/gdk-pixbuf/unstable/gdk-pixbuf-The-GdkPixbuf-Structure.html#GdkPixbuf"><span class="returnvalue">GdkPixbuf</span></a> *         rsvg_pixbuf_from_file               (<em class="parameter"><code>const <span class="type">gchar</span> *file_name</code></em>,
+<pre class="programlisting"><a href="/usr/share/gtk-doc/html/gdk-pixbuf/gdk-pixbuf-The-GdkPixbuf-Structure.html#GdkPixbuf"><span class="returnvalue">GdkPixbuf</span></a> *         rsvg_pixbuf_from_file               (<em class="parameter"><code>const <span class="type">gchar</span> *file_name</code></em>,
                                                          <em class="parameter"><code><span class="type">GError</span> **error</code></em>);</pre>
 <div class="warning" style="margin-left: 0.5in; margin-right: 0.5in;">
 <h3 class="title">Warning</h3>
 <p><code class="literal">rsvg_pixbuf_from_file</code> is deprecated and should not be used in newly-written code. Set up a cairo matrix and use <a class="link" href="RsvgHandle.html#rsvg-handle-new-from-file" title="rsvg_handle_new_from_file ()"><code class="function">rsvg_handle_new_from_file()</code></a> + <a class="link" href="rsvg-Using-RSVG-with-cairo.html#rsvg-handle-render-cairo" title="rsvg_handle_render_cairo ()"><code class="function">rsvg_handle_render_cairo()</code></a> instead.</p>
 </div>
 <p>
-Loads a new <a href="http://library.gnome.org/devel/gdk-pixbuf/unstable/gdk-pixbuf-The-GdkPixbuf-Structure.html#GdkPixbuf"><span class="type">GdkPixbuf</span></a> from <em class="parameter"><code>file_name</code></em> and returns it.  The caller must
+Loads a new <a href="/usr/share/gtk-doc/html/gdk-pixbuf/gdk-pixbuf-The-GdkPixbuf-Structure.html#GdkPixbuf"><span class="type">GdkPixbuf</span></a> from <em class="parameter"><code>file_name</code></em> and returns it.  The caller must
 assume the reference to the reurned pixbuf. If an error occurred, <em class="parameter"><code>error</code></em> is
-set and <a href="/home/mclasen/gnome/share/gtk-doc/html/liboil/liboil-liboiljunk.html#NULL--CAPS"><code class="literal">NULL</code></a> is returned.
+set and <code class="literal">NULL</code> is returned.
 </p>
 <div class="variablelist"><table border="0" class="variablelist">
 <colgroup>
@@ -170,7 +170,7 @@ set and <a href="/home/mclasen/gnome/share/gtk-doc/html/liboil/liboil-liboiljunk
 </tr>
 <tr>
 <td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
-<td>A newly allocated <a href="http://library.gnome.org/devel/gdk-pixbuf/unstable/gdk-pixbuf-The-GdkPixbuf-Structure.html#GdkPixbuf"><span class="type">GdkPixbuf</span></a>, or <a href="/home/mclasen/gnome/share/gtk-doc/html/liboil/liboil-liboiljunk.html#NULL--CAPS"><code class="literal">NULL</code></a>
+<td>A newly allocated <a href="/usr/share/gtk-doc/html/gdk-pixbuf/gdk-pixbuf-The-GdkPixbuf-Structure.html#GdkPixbuf"><span class="type">GdkPixbuf</span></a>, or <code class="literal">NULL</code>
 </td>
 </tr>
 </tbody>
@@ -179,7 +179,7 @@ set and <a href="/home/mclasen/gnome/share/gtk-doc/html/liboil/liboil-liboiljunk
 <hr>
 <div class="refsect2">
 <a name="rsvg-pixbuf-from-file-at-zoom"></a><h3>rsvg_pixbuf_from_file_at_zoom ()</h3>
-<pre class="programlisting"><a href="http://library.gnome.org/devel/gdk-pixbuf/unstable/gdk-pixbuf-The-GdkPixbuf-Structure.html#GdkPixbuf"><span class="returnvalue">GdkPixbuf</span></a> *         rsvg_pixbuf_from_file_at_zoom       (<em class="parameter"><code>const <span class="type">gchar</span> *file_name</code></em>,
+<pre class="programlisting"><a href="/usr/share/gtk-doc/html/gdk-pixbuf/gdk-pixbuf-The-GdkPixbuf-Structure.html#GdkPixbuf"><span class="returnvalue">GdkPixbuf</span></a> *         rsvg_pixbuf_from_file_at_zoom       (<em class="parameter"><code>const <span class="type">gchar</span> *file_name</code></em>,
                                                          <em class="parameter"><code><span class="type">double</span> x_zoom</code></em>,
                                                          <em class="parameter"><code><span class="type">double</span> y_zoom</code></em>,
                                                          <em class="parameter"><code><span class="type">GError</span> **error</code></em>);</pre>
@@ -188,10 +188,10 @@ set and <a href="/home/mclasen/gnome/share/gtk-doc/html/liboil/liboil-liboiljunk
 <p><code class="literal">rsvg_pixbuf_from_file_at_zoom</code> is deprecated and should not be used in newly-written code. Set up a cairo matrix and use <a class="link" href="RsvgHandle.html#rsvg-handle-new-from-file" title="rsvg_handle_new_from_file ()"><code class="function">rsvg_handle_new_from_file()</code></a> + <a class="link" href="rsvg-Using-RSVG-with-cairo.html#rsvg-handle-render-cairo" title="rsvg_handle_render_cairo ()"><code class="function">rsvg_handle_render_cairo()</code></a> instead.</p>
 </div>
 <p>
-Loads a new <a href="http://library.gnome.org/devel/gdk-pixbuf/unstable/gdk-pixbuf-The-GdkPixbuf-Structure.html#GdkPixbuf"><span class="type">GdkPixbuf</span></a> from <em class="parameter"><code>file_name</code></em> and returns it.  This pixbuf is scaled
+Loads a new <a href="/usr/share/gtk-doc/html/gdk-pixbuf/gdk-pixbuf-The-GdkPixbuf-Structure.html#GdkPixbuf"><span class="type">GdkPixbuf</span></a> from <em class="parameter"><code>file_name</code></em> and returns it.  This pixbuf is scaled
 from the size indicated by the file by a factor of <em class="parameter"><code>x_zoom</code></em> and <em class="parameter"><code>y_zoom</code></em>.  The
 caller must assume the reference to the returned pixbuf. If an error
-occurred, <em class="parameter"><code>error</code></em> is set and <a href="/home/mclasen/gnome/share/gtk-doc/html/liboil/liboil-liboiljunk.html#NULL--CAPS"><code class="literal">NULL</code></a> is returned.
+occurred, <em class="parameter"><code>error</code></em> is set and <code class="literal">NULL</code> is returned.
 </p>
 <div class="variablelist"><table border="0" class="variablelist">
 <colgroup>
@@ -217,7 +217,7 @@ occurred, <em class="parameter"><code>error</code></em> is set and <a href="/hom
 </tr>
 <tr>
 <td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
-<td>A newly allocated <a href="http://library.gnome.org/devel/gdk-pixbuf/unstable/gdk-pixbuf-The-GdkPixbuf-Structure.html#GdkPixbuf"><span class="type">GdkPixbuf</span></a>, or <a href="/home/mclasen/gnome/share/gtk-doc/html/liboil/liboil-liboiljunk.html#NULL--CAPS"><code class="literal">NULL</code></a>
+<td>A newly allocated <a href="/usr/share/gtk-doc/html/gdk-pixbuf/gdk-pixbuf-The-GdkPixbuf-Structure.html#GdkPixbuf"><span class="type">GdkPixbuf</span></a>, or <code class="literal">NULL</code>
 </td>
 </tr>
 </tbody>
@@ -226,7 +226,7 @@ occurred, <em class="parameter"><code>error</code></em> is set and <a href="/hom
 <hr>
 <div class="refsect2">
 <a name="rsvg-pixbuf-from-file-at-size"></a><h3>rsvg_pixbuf_from_file_at_size ()</h3>
-<pre class="programlisting"><a href="http://library.gnome.org/devel/gdk-pixbuf/unstable/gdk-pixbuf-The-GdkPixbuf-Structure.html#GdkPixbuf"><span class="returnvalue">GdkPixbuf</span></a> *         rsvg_pixbuf_from_file_at_size       (<em class="parameter"><code>const <span class="type">gchar</span> *file_name</code></em>,
+<pre class="programlisting"><a href="/usr/share/gtk-doc/html/gdk-pixbuf/gdk-pixbuf-The-GdkPixbuf-Structure.html#GdkPixbuf"><span class="returnvalue">GdkPixbuf</span></a> *         rsvg_pixbuf_from_file_at_size       (<em class="parameter"><code>const <span class="type">gchar</span> *file_name</code></em>,
                                                          <em class="parameter"><code><span class="type">gint</span> width</code></em>,
                                                          <em class="parameter"><code><span class="type">gint</span> height</code></em>,
                                                          <em class="parameter"><code><span class="type">GError</span> **error</code></em>);</pre>
@@ -235,11 +235,11 @@ occurred, <em class="parameter"><code>error</code></em> is set and <a href="/hom
 <p><code class="literal">rsvg_pixbuf_from_file_at_size</code> is deprecated and should not be used in newly-written code. Set up a cairo matrix and use <a class="link" href="RsvgHandle.html#rsvg-handle-new-from-file" title="rsvg_handle_new_from_file ()"><code class="function">rsvg_handle_new_from_file()</code></a> + <a class="link" href="rsvg-Using-RSVG-with-cairo.html#rsvg-handle-render-cairo" title="rsvg_handle_render_cairo ()"><code class="function">rsvg_handle_render_cairo()</code></a> instead.</p>
 </div>
 <p>
-Loads a new <a href="http://library.gnome.org/devel/gdk-pixbuf/unstable/gdk-pixbuf-The-GdkPixbuf-Structure.html#GdkPixbuf"><span class="type">GdkPixbuf</span></a> from <em class="parameter"><code>file_name</code></em> and returns it.  This pixbuf is scaled
+Loads a new <a href="/usr/share/gtk-doc/html/gdk-pixbuf/gdk-pixbuf-The-GdkPixbuf-Structure.html#GdkPixbuf"><span class="type">GdkPixbuf</span></a> from <em class="parameter"><code>file_name</code></em> and returns it.  This pixbuf is scaled
 from the size indicated to the new size indicated by <em class="parameter"><code>width</code></em> and <em class="parameter"><code>height</code></em>.  If
 either of these are -1, then the default size of the image being loaded is
 used.  The caller must assume the reference to the returned pixbuf. If an
-error occurred, <em class="parameter"><code>error</code></em> is set and <a href="/home/mclasen/gnome/share/gtk-doc/html/liboil/liboil-liboiljunk.html#NULL--CAPS"><code class="literal">NULL</code></a> is returned.
+error occurred, <em class="parameter"><code>error</code></em> is set and <code class="literal">NULL</code> is returned.
 </p>
 <div class="variablelist"><table border="0" class="variablelist">
 <colgroup>
@@ -265,7 +265,7 @@ error occurred, <em class="parameter"><code>error</code></em> is set and <a href
 </tr>
 <tr>
 <td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
-<td>A newly allocated <a href="http://library.gnome.org/devel/gdk-pixbuf/unstable/gdk-pixbuf-The-GdkPixbuf-Structure.html#GdkPixbuf"><span class="type">GdkPixbuf</span></a>, or <a href="/home/mclasen/gnome/share/gtk-doc/html/liboil/liboil-liboiljunk.html#NULL--CAPS"><code class="literal">NULL</code></a>
+<td>A newly allocated <a href="/usr/share/gtk-doc/html/gdk-pixbuf/gdk-pixbuf-The-GdkPixbuf-Structure.html#GdkPixbuf"><span class="type">GdkPixbuf</span></a>, or <code class="literal">NULL</code>
 </td>
 </tr>
 </tbody>
@@ -274,7 +274,7 @@ error occurred, <em class="parameter"><code>error</code></em> is set and <a href
 <hr>
 <div class="refsect2">
 <a name="rsvg-pixbuf-from-file-at-max-size"></a><h3>rsvg_pixbuf_from_file_at_max_size ()</h3>
-<pre class="programlisting"><a href="http://library.gnome.org/devel/gdk-pixbuf/unstable/gdk-pixbuf-The-GdkPixbuf-Structure.html#GdkPixbuf"><span class="returnvalue">GdkPixbuf</span></a> *         rsvg_pixbuf_from_file_at_max_size   (<em class="parameter"><code>const <span class="type">gchar</span> *file_name</code></em>,
+<pre class="programlisting"><a href="/usr/share/gtk-doc/html/gdk-pixbuf/gdk-pixbuf-The-GdkPixbuf-Structure.html#GdkPixbuf"><span class="returnvalue">GdkPixbuf</span></a> *         rsvg_pixbuf_from_file_at_max_size   (<em class="parameter"><code>const <span class="type">gchar</span> *file_name</code></em>,
                                                          <em class="parameter"><code><span class="type">gint</span> max_width</code></em>,
                                                          <em class="parameter"><code><span class="type">gint</span> max_height</code></em>,
                                                          <em class="parameter"><code><span class="type">GError</span> **error</code></em>);</pre>
@@ -283,10 +283,10 @@ error occurred, <em class="parameter"><code>error</code></em> is set and <a href
 <p><code class="literal">rsvg_pixbuf_from_file_at_max_size</code> is deprecated and should not be used in newly-written code. Set up a cairo matrix and use <a class="link" href="RsvgHandle.html#rsvg-handle-new-from-file" title="rsvg_handle_new_from_file ()"><code class="function">rsvg_handle_new_from_file()</code></a> + <a class="link" href="rsvg-Using-RSVG-with-cairo.html#rsvg-handle-render-cairo" title="rsvg_handle_render_cairo ()"><code class="function">rsvg_handle_render_cairo()</code></a> instead.</p>
 </div>
 <p>
-Loads a new <a href="http://library.gnome.org/devel/gdk-pixbuf/unstable/gdk-pixbuf-The-GdkPixbuf-Structure.html#GdkPixbuf"><span class="type">GdkPixbuf</span></a> from <em class="parameter"><code>file_name</code></em> and returns it.  This pixbuf is uniformly
+Loads a new <a href="/usr/share/gtk-doc/html/gdk-pixbuf/gdk-pixbuf-The-GdkPixbuf-Structure.html#GdkPixbuf"><span class="type">GdkPixbuf</span></a> from <em class="parameter"><code>file_name</code></em> and returns it.  This pixbuf is uniformly
 scaled so that the it fits into a rectangle of size max_width * max_height. The
 caller must assume the reference to the returned pixbuf. If an error occurred,
-<em class="parameter"><code>error</code></em> is set and <a href="/home/mclasen/gnome/share/gtk-doc/html/liboil/liboil-liboiljunk.html#NULL--CAPS"><code class="literal">NULL</code></a> is returned.
+<em class="parameter"><code>error</code></em> is set and <code class="literal">NULL</code> is returned.
 </p>
 <div class="variablelist"><table border="0" class="variablelist">
 <colgroup>
@@ -312,7 +312,7 @@ caller must assume the reference to the returned pixbuf. If an error occurred,
 </tr>
 <tr>
 <td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
-<td>A newly allocated <a href="http://library.gnome.org/devel/gdk-pixbuf/unstable/gdk-pixbuf-The-GdkPixbuf-Structure.html#GdkPixbuf"><span class="type">GdkPixbuf</span></a>, or <a href="/home/mclasen/gnome/share/gtk-doc/html/liboil/liboil-liboiljunk.html#NULL--CAPS"><code class="literal">NULL</code></a>
+<td>A newly allocated <a href="/usr/share/gtk-doc/html/gdk-pixbuf/gdk-pixbuf-The-GdkPixbuf-Structure.html#GdkPixbuf"><span class="type">GdkPixbuf</span></a>, or <code class="literal">NULL</code>
 </td>
 </tr>
 </tbody>
@@ -321,7 +321,7 @@ caller must assume the reference to the returned pixbuf. If an error occurred,
 <hr>
 <div class="refsect2">
 <a name="rsvg-pixbuf-from-file-at-zoom-with-max"></a><h3>rsvg_pixbuf_from_file_at_zoom_with_max ()</h3>
-<pre class="programlisting"><a href="http://library.gnome.org/devel/gdk-pixbuf/unstable/gdk-pixbuf-The-GdkPixbuf-Structure.html#GdkPixbuf"><span class="returnvalue">GdkPixbuf</span></a> *         rsvg_pixbuf_from_file_at_zoom_with_max
+<pre class="programlisting"><a href="/usr/share/gtk-doc/html/gdk-pixbuf/gdk-pixbuf-The-GdkPixbuf-Structure.html#GdkPixbuf"><span class="returnvalue">GdkPixbuf</span></a> *         rsvg_pixbuf_from_file_at_zoom_with_max
                                                         (<em class="parameter"><code>const <span class="type">gchar</span> *file_name</code></em>,
                                                          <em class="parameter"><code><span class="type">double</span> x_zoom</code></em>,
                                                          <em class="parameter"><code><span class="type">double</span> y_zoom</code></em>,
@@ -333,11 +333,11 @@ caller must assume the reference to the returned pixbuf. If an error occurred,
 <p><code class="literal">rsvg_pixbuf_from_file_at_zoom_with_max</code> is deprecated and should not be used in newly-written code. Set up a cairo matrix and use <a class="link" href="RsvgHandle.html#rsvg-handle-new-from-file" title="rsvg_handle_new_from_file ()"><code class="function">rsvg_handle_new_from_file()</code></a> + <a class="link" href="rsvg-Using-RSVG-with-cairo.html#rsvg-handle-render-cairo" title="rsvg_handle_render_cairo ()"><code class="function">rsvg_handle_render_cairo()</code></a> instead.</p>
 </div>
 <p>
-Loads a new <a href="http://library.gnome.org/devel/gdk-pixbuf/unstable/gdk-pixbuf-The-GdkPixbuf-Structure.html#GdkPixbuf"><span class="type">GdkPixbuf</span></a> from <em class="parameter"><code>file_name</code></em> and returns it.  This pixbuf is scaled
+Loads a new <a href="/usr/share/gtk-doc/html/gdk-pixbuf/gdk-pixbuf-The-GdkPixbuf-Structure.html#GdkPixbuf"><span class="type">GdkPixbuf</span></a> from <em class="parameter"><code>file_name</code></em> and returns it.  This pixbuf is scaled
 from the size indicated by the file by a factor of <em class="parameter"><code>x_zoom</code></em> and <em class="parameter"><code>y_zoom</code></em>. If the
 resulting pixbuf would be larger than max_width/max_heigh it is uniformly scaled
 down to fit in that rectangle. The caller must assume the reference to the
-returned pixbuf. If an error occurred, <em class="parameter"><code>error</code></em> is set and <a href="/home/mclasen/gnome/share/gtk-doc/html/liboil/liboil-liboiljunk.html#NULL--CAPS"><code class="literal">NULL</code></a> is returned.
+returned pixbuf. If an error occurred, <em class="parameter"><code>error</code></em> is set and <code class="literal">NULL</code> is returned.
 </p>
 <div class="variablelist"><table border="0" class="variablelist">
 <colgroup>
@@ -371,7 +371,7 @@ returned pixbuf. If an error occurred, <em class="parameter"><code>error</code><
 </tr>
 <tr>
 <td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
-<td>A newly allocated <a href="http://library.gnome.org/devel/gdk-pixbuf/unstable/gdk-pixbuf-The-GdkPixbuf-Structure.html#GdkPixbuf"><span class="type">GdkPixbuf</span></a>, or <a href="/home/mclasen/gnome/share/gtk-doc/html/liboil/liboil-liboiljunk.html#NULL--CAPS"><code class="literal">NULL</code></a>
+<td>A newly allocated <a href="/usr/share/gtk-doc/html/gdk-pixbuf/gdk-pixbuf-The-GdkPixbuf-Structure.html#GdkPixbuf"><span class="type">GdkPixbuf</span></a>, or <code class="literal">NULL</code>
 </td>
 </tr>
 </tbody>
@@ -381,6 +381,6 @@ returned pixbuf. If an error occurred, <em class="parameter"><code>error</code><
 </div>
 <div class="footer">
 <hr>
-          Generated by GTK-Doc V1.18.1</div>
+          Generated by GTK-Doc V1.19</div>
 </body>
 </html>

@@ -25,6 +25,7 @@
 */
 
 #include "config.h"
+#define _GNU_SOURCE 1
 
 #include "rsvg.h"
 #include "rsvg-private.h"
@@ -572,6 +573,7 @@ rsvg_start_xinclude (RsvgHandle * ctx, RsvgPropertyBag * atts)
             goto fallback;
 
         xml_parser = xmlCreatePushParserCtxt (&rsvgSAXHandlerStruct, ctx, NULL, 0, NULL);
+        xml_parser->options |= XML_PARSE_NONET;
 
         buffer = _rsvg_xml_input_buffer_new_from_stream (stream, NULL /* cancellable */, XML_CHAR_ENCODING_NONE, &err);
         g_object_unref (stream);
@@ -1001,6 +1003,7 @@ void
 rsvg_handle_set_base_uri (RsvgHandle * handle, const char *base_uri)
 {
     gchar *uri;
+    GFile *file;
 
     g_return_if_fail (handle != NULL);
 
@@ -1012,11 +1015,10 @@ rsvg_handle_set_base_uri (RsvgHandle * handle, const char *base_uri)
     else
         uri = rsvg_get_base_uri_from_filename (base_uri);
 
-    if (uri) {
-        if (handle->priv->base_uri)
-            g_free (handle->priv->base_uri);
-        handle->priv->base_uri = uri;
-    }
+    file = g_file_new_for_uri (uri ? uri : "data:");
+    rsvg_handle_set_base_gfile (handle, file);
+    g_object_unref (file);
+    g_free (uri);
 }
 
 /**
@@ -1111,6 +1113,7 @@ rsvg_handle_write_impl (RsvgHandle * handle, const guchar * buf, gsize count, GE
     if (handle->priv->ctxt == NULL) {
         handle->priv->ctxt = xmlCreatePushParserCtxt (&rsvgSAXHandlerStruct, handle, NULL, 0,
                                                       rsvg_handle_get_base_uri (handle));
+        handle->priv->ctxt->options |= XML_PARSE_NONET;
 
         /* if false, external entities work, but internal ones don't. if true, internal entities
            work, but external ones don't. favor internal entities, in order to not cause a
@@ -1407,7 +1410,7 @@ rsvg_handle_get_dimensions_sub (RsvgHandle * handle, RsvgDimensionData * dimensi
  * @position_data: (out): A place to store the SVG fragment's position.
  * @id: An element's id within the SVG.
  * For example, if you have a layer called "layer1" for that you want to get
- * the position, pass "#layer1" as the id.
+ * the position, pass "##layer1" as the id.
  *
  * Get the position of a subelement of the SVG file. Do not call from within
  * the size_func callback, because an infinite loop will occur.
@@ -1767,6 +1770,7 @@ rsvg_handle_read_stream_sync (RsvgHandle   *handle,
     if (priv->ctxt == NULL) {
         priv->ctxt = xmlCreatePushParserCtxt (&rsvgSAXHandlerStruct, handle, NULL, 0,
                                               rsvg_handle_get_base_uri (handle));
+        priv->ctxt->options |= XML_PARSE_NONET;
 
         /* if false, external entities work, but internal ones don't. if true, internal entities
            work, but external ones don't. favor internal entities, in order to not cause a
@@ -2146,44 +2150,163 @@ _rsvg_handle_allow_load (RsvgHandle *handle,
                          const char *uri,
                          GError **error)
 {
-    RsvgLoadPolicy policy = handle->priv->load_policy;
+    RsvgHandlePrivate *priv = handle->priv;
+    GFile *base;
+    char *path, *dir;
+    char *scheme = NULL, *cpath = NULL, *cdir = NULL;
 
-    if (policy == RSVG_LOAD_POLICY_ALL_PERMISSIVE)
-        return TRUE;
+    g_assert (handle->priv->load_policy == RSVG_LOAD_POLICY_STRICT);
 
+    scheme = g_uri_parse_scheme (uri);
+
+    /* Not a valid URI */
+    if (scheme == NULL)
+        goto deny;
+
+    /* Allow loads of data: from any location */
+    if (g_str_equal (scheme, "data"))
+        goto allow;
+
+    /* No base to compare to? */
+    if (priv->base_gfile == NULL)
+        goto deny;
+
+    /* Deny loads from differing URI schemes */
+    if (!g_file_has_uri_scheme (priv->base_gfile, scheme))
+        goto deny;
+
+    /* resource: is allowed to load anything from other resources */
+    if (g_str_equal (scheme, "resource"))
+        goto allow;
+
+    /* Non-file: isn't allowed to load anything */
+    if (!g_str_equal (scheme, "file"))
+        goto deny;
+
+    base = g_file_get_parent (priv->base_gfile);
+    if (base == NULL)
+        goto deny;
+
+    dir = g_file_get_path (base);
+    g_object_unref (base);
+
+    /* FIXME portability */
+    cdir = canonicalize_file_name (dir);
+    g_free (dir);
+    if (cdir == NULL)
+        goto deny;
+
+    path = g_filename_from_uri (uri, NULL, NULL);
+    if (path == NULL)
+        goto deny;
+
+    /* FIXME portability */
+    cpath = canonicalize_file_name (path);
+    g_free (path);
+
+    if (cpath == NULL)
+        goto deny;
+
+    /* Now check that @cpath is below @cdir */
+    if (!g_str_has_prefix (cpath, cdir) ||
+        cpath[strlen (cdir)] != G_DIR_SEPARATOR)
+        goto deny;
+
+    /* Allow load! */
+
+ allow:
+    g_free (scheme);
+    free (cpath);
+    free (cdir);
     return TRUE;
+
+ deny:
+    g_free (scheme);
+    free (cpath);
+    free (cdir);
+
+    g_set_error (error, G_IO_ERROR, G_IO_ERROR_PERMISSION_DENIED,
+                 "File may not link to URI \"%s\"", uri);
+    return FALSE;
+}
+
+static char *
+_rsvg_handle_resolve_uri (RsvgHandle *handle,
+                          const char *uri)
+{
+    RsvgHandlePrivate *priv = handle->priv;
+    char *scheme, *resolved_uri;
+    GFile *base, *resolved;
+
+    if (uri == NULL)
+        return NULL;
+
+    scheme = g_uri_parse_scheme (uri);
+    if (scheme != NULL ||
+        priv->base_gfile == NULL ||
+        (base = g_file_get_parent (priv->base_gfile)) == NULL) {
+        g_free (scheme);
+        return g_strdup (uri);
+    }
+
+    resolved = g_file_resolve_relative_path (base, uri);
+    resolved_uri = g_file_get_uri (resolved);
+
+    g_free (scheme);
+    g_object_unref (base);
+    g_object_unref (resolved);
+
+    return resolved_uri;
 }
 
 guint8* 
 _rsvg_handle_acquire_data (RsvgHandle *handle,
-                           const char *uri,
+                           const char *url,
                            char **content_type,
                            gsize *len,
                            GError **error)
 {
-    if (!_rsvg_handle_allow_load (handle, uri, error))
-        return NULL;
+    char *uri;
+    guint8 *data;
 
-    return _rsvg_io_acquire_data (uri, 
-                                  rsvg_handle_get_base_uri (handle), 
-                                  content_type, 
-                                  len, 
-                                  handle->priv->cancellable,
-                                  error);
+    uri = _rsvg_handle_resolve_uri (handle, url);
+
+    if (_rsvg_handle_allow_load (handle, uri, error)) {
+        data = _rsvg_io_acquire_data (uri, 
+                                      rsvg_handle_get_base_uri (handle), 
+                                      content_type, 
+                                      len, 
+                                      handle->priv->cancellable,
+                                      error);
+    } else {
+        data = NULL;
+    }
+
+    g_free (uri);
+    return data;
 }
 
 GInputStream *
 _rsvg_handle_acquire_stream (RsvgHandle *handle,
-                             const char *uri,
+                             const char *url,
                              char **content_type,
                              GError **error)
 {
-    if (!_rsvg_handle_allow_load (handle, uri, error))
-        return NULL;
+    char *uri;
+    GInputStream *stream;
 
-    return _rsvg_io_acquire_stream (uri, 
-                                    rsvg_handle_get_base_uri (handle), 
-                                    content_type, 
-                                    handle->priv->cancellable,
-                                    error);
+    uri = _rsvg_handle_resolve_uri (handle, url);
+
+    if (_rsvg_handle_allow_load (handle, uri, error)) {
+        stream = _rsvg_io_acquire_stream (uri, 
+                                          rsvg_handle_get_base_uri (handle), 
+                                          content_type, 
+                                          handle->priv->cancellable,
+                                          error);
+    } else {
+        stream = NULL;
+    }
+
+    g_free (uri);
+    return stream;
 }

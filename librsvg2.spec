@@ -1,12 +1,12 @@
 Name:           librsvg2
 Summary:        An SVG library based on cairo
-Version:        2.37.0
-Release:        3%{?dist}
+Version:        2.39.0
+Release:        1%{?dist}
 
 License:        LGPLv2+
 Group:          System Environment/Libraries
 #VCS:           git:git://git.gnome.org/librsvg
-Source:         http://download.gnome.org/sources/librsvg/2.37/librsvg-%{version}.tar.xz
+Source:         http://download.gnome.org/sources/librsvg/2.39/librsvg-%{version}.tar.xz
 
 # build with vala 0.18
 Patch0: librsvg-vala.patch
@@ -119,6 +119,16 @@ gdk-pixbuf-query-loaders-%{__isa_bits} --update-cache || :
 
 
 %changelog
+* Fri Jan 24 2014 Daniel Mach <dmach@redhat.com> - 2.39.0-1
+- Mass rebuild 2014-01-24
+
+* Tue Jan 14 2014 Jasper St. Pierre <jasper@redhat.com> - 2.39.0
+- Update to 2.39.0
+- Resolves: #1049158
+
+* Fri Dec 27 2013 Daniel Mach <dmach@redhat.com> - 2.37.0-4
+- Mass rebuild 2013-12-27
+
 * Sat May 11 2013 Kalev Lember <kalevlember@gmail.com> - 2.37.0-3
 - Split rsvg-view-3 and rsvg-convert to a -tools subpackage (#915403)
 

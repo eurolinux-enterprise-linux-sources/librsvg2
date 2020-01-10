@@ -3,12 +3,12 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <title>RsvgHandle</title>
-<meta name="generator" content="DocBook XSL Stylesheets V1.78.0">
+<meta name="generator" content="DocBook XSL Stylesheets V1.78.1">
 <link rel="home" href="index.html" title="RSVG Libary Reference Manual">
 <link rel="up" href="rsvg.html" title="Part I. API Reference">
 <link rel="prev" href="rsvg.html" title="Part I. API Reference">
 <link rel="next" href="rsvg-Using-RSVG-with-GIO.html" title="Using RSVG with GIO">
-<meta name="generator" content="GTK-Doc V1.18.1 (XML mode)">
+<meta name="generator" content="GTK-Doc V1.19 (XML mode)">
 <link rel="stylesheet" href="style.css" type="text/css">
 </head>
 <body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
@@ -165,8 +165,7 @@ An enumeration representing possible error domains
 <hr>
 <div class="refsect2">
 <a name="RSVG-ERROR:CAPS"></a><h3>RSVG_ERROR</h3>
-<pre class="programlisting">#define RSVG_ERROR (rsvg_error_quark ())
-</pre>
+<pre class="programlisting">#define             RSVG_ERROR</pre>
 </div>
 <hr>
 <div class="refsect2">
@@ -197,8 +196,6 @@ The RsvgHandle is an object representing the parsed form of a SVG
 <hr>
 <div class="refsect2">
 <a name="RsvgHandlePrivate"></a><h3>RsvgHandlePrivate</h3>
-<pre class="programlisting">typedef struct RsvgHandlePrivate RsvgHandlePrivate;
-</pre>
 </div>
 <hr>
 <div class="refsect2">
@@ -463,7 +460,7 @@ from <span class="type">GIOErrorEnum</span> are also possible.
 </tr>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>error</code></em> :</span></p></td>
-<td>a location to store a <span class="type">GError</span>, or <a href="/home/mclasen/gnome/share/gtk-doc/html/liboil/liboil-liboiljunk.html#NULL--CAPS"><code class="literal">NULL</code></a>. <span class="annotation">[<acronym title="NULL is ok, both for passing and for returning."><span class="acronym">allow-none</span></acronym>]</span>
+<td>a location to store a <span class="type">GError</span>, or <code class="literal">NULL</code>. <span class="annotation">[<acronym title="NULL is ok, both for passing and for returning."><span class="acronym">allow-none</span></acronym>]</span>
 </td>
 </tr>
 <tr>
@@ -497,7 +494,7 @@ freed until <em class="parameter"><code>g_object_unref</code></em> is called.
 </tr>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>error</code></em> :</span></p></td>
-<td>a location to store a <span class="type">GError</span>, or <a href="/home/mclasen/gnome/share/gtk-doc/html/liboil/liboil-liboiljunk.html#NULL--CAPS"><code class="literal">NULL</code></a>. <span class="annotation">[<acronym title="NULL is ok, both for passing and for returning."><span class="acronym">allow-none</span></acronym>]</span>
+<td>a location to store a <span class="type">GError</span>, or <code class="literal">NULL</code>. <span class="annotation">[<acronym title="NULL is ok, both for passing and for returning."><span class="acronym">allow-none</span></acronym>]</span>
 </td>
 </tr>
 <tr>
@@ -655,7 +652,7 @@ the size_func callback, because an infinite loop will occur.
 <td><p><span class="term"><em class="parameter"><code>id</code></em> :</span></p></td>
 <td>An element's id within the SVG.
 For example, if you have a layer called "layer1" for that you want to get
-the position, pass "<span class="type">layer1</span>" as the id.</td>
+the position, pass "#<span class="type">layer1</span>" as the id.</td>
 </tr>
 </tbody>
 </table></div>
@@ -702,7 +699,7 @@ Checks whether the element <em class="parameter"><code>id</code></em> exists in 
 <p><code class="literal">rsvg_handle_get_title</code> is deprecated and should not be used in newly-written code. 2.36</p>
 </div>
 <p>
-Returns the SVG's title in UTF-8 or <a href="/home/mclasen/gnome/share/gtk-doc/html/liboil/liboil-liboiljunk.html#NULL--CAPS"><code class="literal">NULL</code></a>. You must make a copy
+Returns the SVG's title in UTF-8 or <code class="literal">NULL</code>. You must make a copy
 of this title if you wish to use it after <span class="type">handle</span> has been freed.
 </p>
 <div class="variablelist"><table border="0" class="variablelist">
@@ -733,7 +730,7 @@ of this title if you wish to use it after <span class="type">handle</span> has b
 <p><code class="literal">rsvg_handle_get_desc</code> is deprecated and should not be used in newly-written code. 2.36</p>
 </div>
 <p>
-Returns the SVG's description in UTF-8 or <a href="/home/mclasen/gnome/share/gtk-doc/html/liboil/liboil-liboiljunk.html#NULL--CAPS"><code class="literal">NULL</code></a>. You must make a copy
+Returns the SVG's description in UTF-8 or <code class="literal">NULL</code>. You must make a copy
 of this description if you wish to use it after <span class="type">handle</span> has been freed.
 </p>
 <div class="variablelist"><table border="0" class="variablelist">
@@ -764,7 +761,7 @@ of this description if you wish to use it after <span class="type">handle</span>
 <p><code class="literal">rsvg_handle_get_metadata</code> is deprecated and should not be used in newly-written code. 2.36</p>
 </div>
 <p>
-Returns the SVG's metadata in UTF-8 or <a href="/home/mclasen/gnome/share/gtk-doc/html/liboil/liboil-liboiljunk.html#NULL--CAPS"><code class="literal">NULL</code></a>. You must make a copy
+Returns the SVG's metadata in UTF-8 or <code class="literal">NULL</code>. You must make a copy
 of this metadata if you wish to use it after <span class="type">handle</span> has been freed.
 </p>
 <div class="variablelist"><table border="0" class="variablelist">
@@ -816,7 +813,7 @@ Loads the SVG specified by <span class="type">data</span>.
 </tr>
 <tr>
 <td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
-<td>A RsvgHandle or <a href="/home/mclasen/gnome/share/gtk-doc/html/liboil/liboil-liboiljunk.html#NULL--CAPS"><code class="literal">NULL</code></a> if an error occurs.</td>
+<td>A RsvgHandle or <code class="literal">NULL</code> if an error occurs.</td>
 </tr>
 </tbody>
 </table></div>
@@ -846,7 +843,7 @@ Loads the SVG specified by <span class="type">file_name</span>.
 </tr>
 <tr>
 <td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
-<td>A RsvgHandle or <a href="/home/mclasen/gnome/share/gtk-doc/html/liboil/liboil-liboiljunk.html#NULL--CAPS"><code class="literal">NULL</code></a> if an error occurs.</td>
+<td>A RsvgHandle or <code class="literal">NULL</code> if an error occurs.</td>
 </tr>
 </tbody>
 </table></div>
@@ -860,8 +857,7 @@ Loads the SVG specified by <span class="type">file_name</span>.
 <hr>
 <div class="refsect2">
 <a name="RSVG-TYPE-ERROR:CAPS"></a><h3>RSVG_TYPE_ERROR</h3>
-<pre class="programlisting">#define RSVG_TYPE_ERROR (rsvg_error_get_type())
-</pre>
+<pre class="programlisting">#define             RSVG_TYPE_ERROR</pre>
 </div>
 <hr>
 <div class="refsect2">
@@ -943,17 +939,17 @@ arguments are set to -1.
 </tr>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>size_func</code></em> :</span></p></td>
-<td>A sizing function, or <a href="/home/mclasen/gnome/share/gtk-doc/html/liboil/liboil-liboiljunk.html#NULL--CAPS"><code class="literal">NULL</code></a>
+<td>A sizing function, or <code class="literal">NULL</code>
 </td>
 </tr>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>user_data</code></em> :</span></p></td>
-<td>User data to pass to <em class="parameter"><code>size_func</code></em>, or <a href="/home/mclasen/gnome/share/gtk-doc/html/liboil/liboil-liboiljunk.html#NULL--CAPS"><code class="literal">NULL</code></a>
+<td>User data to pass to <em class="parameter"><code>size_func</code></em>, or <code class="literal">NULL</code>
 </td>
 </tr>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>user_data_destroy</code></em> :</span></p></td>
-<td>Destroy function for <em class="parameter"><code>user_data</code></em>, or <a href="/home/mclasen/gnome/share/gtk-doc/html/liboil/liboil-liboiljunk.html#NULL--CAPS"><code class="literal">NULL</code></a>
+<td>Destroy function for <em class="parameter"><code>user_data</code></em>, or <code class="literal">NULL</code>
 </td>
 </tr>
 </tbody>
@@ -1068,6 +1064,6 @@ SVG's description
 </div>
 <div class="footer">
 <hr>
-          Generated by GTK-Doc V1.18.1</div>
+          Generated by GTK-Doc V1.19</div>
 </body>
 </html>

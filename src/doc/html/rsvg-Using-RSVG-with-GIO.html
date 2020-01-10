@@ -3,12 +3,12 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <title>Using RSVG with GIO</title>
-<meta name="generator" content="DocBook XSL Stylesheets V1.78.0">
+<meta name="generator" content="DocBook XSL Stylesheets V1.78.1">
 <link rel="home" href="index.html" title="RSVG Libary Reference Manual">
 <link rel="up" href="rsvg.html" title="Part I. API Reference">
 <link rel="prev" href="RsvgHandle.html" title="RsvgHandle">
 <link rel="next" href="rsvg-Using-RSVG-with-cairo.html" title="Using RSVG with cairo">
-<meta name="generator" content="GTK-Doc V1.18.1 (XML mode)">
+<meta name="generator" content="GTK-Doc V1.19 (XML mode)">
 <link rel="stylesheet" href="style.css" type="text/css">
 </head>
 <body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
@@ -127,7 +127,7 @@ or <a class="link" href="rsvg-Using-RSVG-with-GIO.html#rsvg-handle-read-stream-s
 Reads <em class="parameter"><code>stream</code></em> and writes the data from it to <em class="parameter"><code>handle</code></em>.
 </p>
 <p>
-If <em class="parameter"><code>cancellable</code></em> is not <a href="/home/mclasen/gnome/share/gtk-doc/html/liboil/liboil-liboiljunk.html#NULL--CAPS"><code class="literal">NULL</code></a>, then the operation can be cancelled by
+If <em class="parameter"><code>cancellable</code></em> is not <code class="literal">NULL</code>, then the operation can be cancelled by
 triggering the cancellable object from another thread. If the
 operation was cancelled, the error G_IO_ERROR_CANCELLED will be
 returned.
@@ -150,12 +150,12 @@ returned.
 </tr>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>cancellable</code></em> :</span></p></td>
-<td>a <span class="type">GCancellable</span>, or <a href="/home/mclasen/gnome/share/gtk-doc/html/liboil/liboil-liboiljunk.html#NULL--CAPS"><code class="literal">NULL</code></a>. <span class="annotation">[<acronym title="NULL is ok, both for passing and for returning."><span class="acronym">allow-none</span></acronym>]</span>
+<td>a <span class="type">GCancellable</span>, or <code class="literal">NULL</code>. <span class="annotation">[<acronym title="NULL is ok, both for passing and for returning."><span class="acronym">allow-none</span></acronym>]</span>
 </td>
 </tr>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>error</code></em> :</span></p></td>
-<td>a location to store a <span class="type">GError</span>, or <a href="/home/mclasen/gnome/share/gtk-doc/html/liboil/liboil-liboiljunk.html#NULL--CAPS"><code class="literal">NULL</code></a>. <span class="annotation">[<acronym title="NULL is ok, both for passing and for returning."><span class="acronym">allow-none</span></acronym>]</span>
+<td>a location to store a <span class="type">GError</span>, or <code class="literal">NULL</code>. <span class="annotation">[<acronym title="NULL is ok, both for passing and for returning."><span class="acronym">allow-none</span></acronym>]</span>
 </td>
 </tr>
 <tr>
@@ -179,7 +179,7 @@ with <em class="parameter"><code>error</code></em> filled in</td>
 Creates a new <a class="link" href="RsvgHandle.html" title="RsvgHandle"><span class="type">RsvgHandle</span></a> for <em class="parameter"><code>file</code></em>.
 </p>
 <p>
-If <em class="parameter"><code>cancellable</code></em> is not <a href="/home/mclasen/gnome/share/gtk-doc/html/liboil/liboil-liboiljunk.html#NULL--CAPS"><code class="literal">NULL</code></a>, then the operation can be cancelled by
+If <em class="parameter"><code>cancellable</code></em> is not <code class="literal">NULL</code>, then the operation can be cancelled by
 triggering the cancellable object from another thread. If the
 operation was cancelled, the error G_IO_ERROR_CANCELLED will be
 returned.
@@ -202,17 +202,17 @@ returned.
 </tr>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>cancellable</code></em> :</span></p></td>
-<td>a <span class="type">GCancellable</span>, or <a href="/home/mclasen/gnome/share/gtk-doc/html/liboil/liboil-liboiljunk.html#NULL--CAPS"><code class="literal">NULL</code></a>. <span class="annotation">[<acronym title="NULL is ok, both for passing and for returning."><span class="acronym">allow-none</span></acronym>]</span>
+<td>a <span class="type">GCancellable</span>, or <code class="literal">NULL</code>. <span class="annotation">[<acronym title="NULL is ok, both for passing and for returning."><span class="acronym">allow-none</span></acronym>]</span>
 </td>
 </tr>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>error</code></em> :</span></p></td>
-<td>a location to store a <span class="type">GError</span>, or <a href="/home/mclasen/gnome/share/gtk-doc/html/liboil/liboil-liboiljunk.html#NULL--CAPS"><code class="literal">NULL</code></a>. <span class="annotation">[<acronym title="NULL is ok, both for passing and for returning."><span class="acronym">allow-none</span></acronym>]</span>
+<td>a location to store a <span class="type">GError</span>, or <code class="literal">NULL</code>. <span class="annotation">[<acronym title="NULL is ok, both for passing and for returning."><span class="acronym">allow-none</span></acronym>]</span>
 </td>
 </tr>
 <tr>
 <td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
-<td>a new <a class="link" href="RsvgHandle.html" title="RsvgHandle"><span class="type">RsvgHandle</span></a> on success, or <a href="/home/mclasen/gnome/share/gtk-doc/html/liboil/liboil-liboiljunk.html#NULL--CAPS"><code class="literal">NULL</code></a> with <em class="parameter"><code>error</code></em> filled in</td>
+<td>a new <a class="link" href="RsvgHandle.html" title="RsvgHandle"><span class="type">RsvgHandle</span></a> on success, or <code class="literal">NULL</code> with <em class="parameter"><code>error</code></em> filled in</td>
 </tr>
 </tbody>
 </table></div>
@@ -230,7 +230,7 @@ returned.
 Creates a new <a class="link" href="RsvgHandle.html" title="RsvgHandle"><span class="type">RsvgHandle</span></a> for <em class="parameter"><code>stream</code></em>.
 </p>
 <p>
-If <em class="parameter"><code>cancellable</code></em> is not <a href="/home/mclasen/gnome/share/gtk-doc/html/liboil/liboil-liboiljunk.html#NULL--CAPS"><code class="literal">NULL</code></a>, then the operation can be cancelled by
+If <em class="parameter"><code>cancellable</code></em> is not <code class="literal">NULL</code>, then the operation can be cancelled by
 triggering the cancellable object from another thread. If the
 operation was cancelled, the error G_IO_ERROR_CANCELLED will be
 returned.
@@ -248,7 +248,7 @@ returned.
 </tr>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>base_file</code></em> :</span></p></td>
-<td>a <span class="type">GFile</span>, or <a href="/home/mclasen/gnome/share/gtk-doc/html/liboil/liboil-liboiljunk.html#NULL--CAPS"><code class="literal">NULL</code></a>. <span class="annotation">[<acronym title="NULL is ok, both for passing and for returning."><span class="acronym">allow-none</span></acronym>]</span>
+<td>a <span class="type">GFile</span>, or <code class="literal">NULL</code>. <span class="annotation">[<acronym title="NULL is ok, both for passing and for returning."><span class="acronym">allow-none</span></acronym>]</span>
 </td>
 </tr>
 <tr>
@@ -258,17 +258,17 @@ returned.
 </tr>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>cancellable</code></em> :</span></p></td>
-<td>a <span class="type">GCancellable</span>, or <a href="/home/mclasen/gnome/share/gtk-doc/html/liboil/liboil-liboiljunk.html#NULL--CAPS"><code class="literal">NULL</code></a>. <span class="annotation">[<acronym title="NULL is ok, both for passing and for returning."><span class="acronym">allow-none</span></acronym>]</span>
+<td>a <span class="type">GCancellable</span>, or <code class="literal">NULL</code>. <span class="annotation">[<acronym title="NULL is ok, both for passing and for returning."><span class="acronym">allow-none</span></acronym>]</span>
 </td>
 </tr>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>error</code></em> :</span></p></td>
-<td>a location to store a <span class="type">GError</span>, or <a href="/home/mclasen/gnome/share/gtk-doc/html/liboil/liboil-liboiljunk.html#NULL--CAPS"><code class="literal">NULL</code></a>. <span class="annotation">[<acronym title="NULL is ok, both for passing and for returning."><span class="acronym">allow-none</span></acronym>]</span>
+<td>a location to store a <span class="type">GError</span>, or <code class="literal">NULL</code>. <span class="annotation">[<acronym title="NULL is ok, both for passing and for returning."><span class="acronym">allow-none</span></acronym>]</span>
 </td>
 </tr>
 <tr>
 <td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
-<td>a new <a class="link" href="RsvgHandle.html" title="RsvgHandle"><span class="type">RsvgHandle</span></a> on success, or <a href="/home/mclasen/gnome/share/gtk-doc/html/liboil/liboil-liboiljunk.html#NULL--CAPS"><code class="literal">NULL</code></a> with <em class="parameter"><code>error</code></em> filled in</td>
+<td>a new <a class="link" href="RsvgHandle.html" title="RsvgHandle"><span class="type">RsvgHandle</span></a> on success, or <code class="literal">NULL</code> with <em class="parameter"><code>error</code></em> filled in</td>
 </tr>
 </tbody>
 </table></div>
@@ -278,6 +278,6 @@ returned.
 </div>
 <div class="footer">
 <hr>
-          Generated by GTK-Doc V1.18.1</div>
+          Generated by GTK-Doc V1.19</div>
 </body>
 </html>

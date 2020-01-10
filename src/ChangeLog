@@ -1,3 +1,93 @@
+commit da80cdb009d2d54254dc4cb4349439a46fb084c3
+Author: Christian Persch <chpe@gnome.org>
+Date:   Mon May 13 20:34:28 2013 +0200
+
+    Version 2.39.0
+
+ NEWS         | 3 +++
+ configure.in | 2 +-
+ 2 files changed, 4 insertions(+), 1 deletion(-)
+
+commit eff36f2adda868d0b75883336e8f9a9f8132e0f7
+Author: Christian Persch <chpe@gnome.org>
+Date:   Fri Aug 16 14:43:31 2013 +0200
+
+    tests: Disable failing test
+    
+    This test fails in 2.37.0 already on F19.
+
+ tests/Makefile.am | 1 -
+ 1 file changed, 1 deletion(-)
+
+commit be7791ee9f0fddd3d0077db2854edc262f444e4b
+Author: Christian Persch <chpe@gnome.org>
+Date:   Sun Jul 28 20:35:17 2013 +0200
+
+    build: Fix build on F19
+
+ configure.in | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+commit e018fb1b1a4a2a2245d451d169fdaec93437cddb
+Author: Christian Persch <chpe@gnome.org>
+Date:   Mon May 13 20:34:09 2013 +0200
+
+    docs: Tiny fix
+
+ rsvg-base.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+commit f01aded72c38f0e18bc7ff67dee800e380251c8e
+Author: Christian Persch <chpe@gnome.org>
+Date:   Mon Feb 11 22:36:58 2013 +0100
+
+    io: Implement strict load policy
+    
+    Allow any file to load from data:, and any resource to load from other
+    resources. Only allow file: to load other file: URIs from below the path
+    of the base file. Any other loads are denied.
+    
+    Bug #691708.
+
+ rsvg-base.c    | 89 ++++++++++++++++++++++++++++++++++++++++++++++++++++------
+ rsvg-io.c      |  2 +-
+ rsvg-private.h |  4 +--
+ 3 files changed, 84 insertions(+), 11 deletions(-)
+
+commit d83e426fff3f6d0fa6042d0930fb70357db24125
+Author: Christian Persch <chpe@gnome.org>
+Date:   Mon Feb 11 22:36:30 2013 +0100
+
+    io: Use XML_PARSE_NONET
+    
+    We don't want to load resources off the net.
+    
+    Bug #691708.
+
+ rsvg-base.c | 3 +++
+ rsvg-css.c  | 2 ++
+ 2 files changed, 5 insertions(+)
+
+commit 56d0018d911eb5783f22125d9893fce075778c64
+Author: Christian Persch <chpe@gnome.org>
+Date:   Sun Mar 3 20:32:09 2013 +0100
+
+    io: Resolve relative URIs
+
+ rsvg-base.c | 81 ++++++++++++++++++++++++++++++++++++++++++++++++-------------
+ 1 file changed, 64 insertions(+), 17 deletions(-)
+
+commit fadaab734988a6f16a5af2c7a5bd856f3f0df37e
+Author: Christian Persch <chpe@gnome.org>
+Date:   Mon Feb 11 22:04:16 2013 +0100
+
+    build: Use -Wno-aggregate-return
+    
+    It's just too noisy.
+
+ configure.in | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
 commit 954a1a2680e9bedfbfdd08c2cab309c4bdebbf2b
 Author: Matthias Clasen <mclasen@redhat.com>
 Date:   Thu Jan 10 07:28:10 2013 -0500
@@ -345,10 +435,9 @@ Date:   Sun Apr 8 14:18:24 2012 -0400
     
     https://bugzilla.gnome.org/show_bug.cgi?id=673748
 
- Makefile.am    |  4 +---
- rsvg-convert.1 | 55 +++++++++++++++++++++++++++++++++++++++++++++++++++++++
- rsvg.1         | 43 -------------------------------------------
- 3 files changed, 56 insertions(+), 46 deletions(-)
+ Makefile.am              |  4 +---
+ rsvg.1 => rsvg-convert.1 | 28 ++++++++++++++++++++--------
+ 2 files changed, 21 insertions(+), 11 deletions(-)
 
 commit 6eac8e0d6dba40a46942018d4bac56d1c6e29afc
 Author: Robert Ancell <robert.ancell@canonical.com>
@@ -2484,10 +2573,9 @@ Date:   Tue Sep 6 08:52:37 2011 +0200
 
     Automatically generate ChangeLog from git history
 
- ChangeLog     | 3826 ---------------------------------------------------------
- ChangeLog.old | 3826 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++
- Makefile.am   |   11 +
- 3 files changed, 3837 insertions(+), 3826 deletions(-)
+ ChangeLog => ChangeLog.old |  0
+ Makefile.am                | 11 +++++++++++
+ 2 files changed, 11 insertions(+)
 
 commit 79fe06acefc9cd739802c01423b5bca7810398dc
 Author: Christian Persch <chpe@gnome.org>
@@ -3092,35 +3180,27 @@ Date:   Thu Jun 10 15:15:15 2010 +0200
     
     Bug #618475.
 
- Makefile.am                                    |  62 +++++++-------
- configure.in                                   | 107 ++++++++++++++++---------
- doc/Makefile.am                                |   5 +-
- doc/tmpl/rsvg-file-util.sgml                   |   3 +
- doc/tmpl/rsvg.sgml                             |  39 +++++++++
- gdk-pixbuf-loader/Makefile.am                  |   9 +--
- gtk-engine/Makefile.am                         |   4 +-
- gtk-engine/examples/bubble/Makefile.am         |  14 +++-
- gtk-engine/examples/bubble/blue.svg            |  18 +++++
- gtk-engine/examples/bubble/green.svg           |  18 +++++
- gtk-engine/examples/bubble/gtk-2.0/.cvsignore  |   2 -
- gtk-engine/examples/bubble/gtk-2.0/Makefile.am |  10 ---
- gtk-engine/examples/bubble/gtk-2.0/blue.svg    |  18 -----
- gtk-engine/examples/bubble/gtk-2.0/green.svg   |  18 -----
- gtk-engine/examples/bubble/gtk-2.0/gtkrc       |  77 ------------------
- gtk-engine/examples/bubble/gtk-2.0/orange.svg  |  18 -----
- gtk-engine/examples/bubble/gtk-2.0/purple.svg  |  18 -----
- gtk-engine/examples/bubble/gtk-2.0/red.svg     |  18 -----
- gtk-engine/examples/bubble/gtkrc               |  77 ++++++++++++++++++
- gtk-engine/examples/bubble/orange.svg          |  18 +++++
- gtk-engine/examples/bubble/purple.svg          |  18 +++++
- gtk-engine/examples/bubble/red.svg             |  18 +++++
- librsvg-2.0-uninstalled.pc.in                  |  14 ----
- librsvg-2.0.pc.in                              |  15 ----
- librsvg-uninstalled.pc.in                      |  14 ++++
- librsvg.pc.in                                  |  15 ++++
- tests/Makefile.am                              |   2 +-
- tools/Makefile.am                              |   5 +-
- 28 files changed, 365 insertions(+), 289 deletions(-)
+ Makefile.am                                        |  62 ++++++------
+ configure.in                                       | 107 ++++++++++++++-------
+ doc/Makefile.am                                    |   5 +-
+ doc/tmpl/rsvg-file-util.sgml                       |   3 +
+ doc/tmpl/rsvg.sgml                                 |  39 ++++++++
+ gdk-pixbuf-loader/Makefile.am                      |   9 +-
+ gtk-engine/Makefile.am                             |   4 +-
+ gtk-engine/examples/bubble/Makefile.am             |  14 ++-
+ gtk-engine/examples/bubble/{gtk-2.0 => }/blue.svg  |   0
+ gtk-engine/examples/bubble/{gtk-2.0 => }/green.svg |   0
+ gtk-engine/examples/bubble/gtk-2.0/.cvsignore      |   2 -
+ gtk-engine/examples/bubble/gtk-2.0/Makefile.am     |  10 --
+ gtk-engine/examples/bubble/{gtk-2.0 => }/gtkrc     |   0
+ .../examples/bubble/{gtk-2.0 => }/orange.svg       |   0
+ .../examples/bubble/{gtk-2.0 => }/purple.svg       |   0
+ gtk-engine/examples/bubble/{gtk-2.0 => }/red.svg   |   0
+ ...-uninstalled.pc.in => librsvg-uninstalled.pc.in |   4 +-
+ librsvg-2.0.pc.in => librsvg.pc.in                 |   6 +-
+ tests/Makefile.am                                  |   2 +-
+ tools/Makefile.am                                  |   5 +-
+ 20 files changed, 174 insertions(+), 98 deletions(-)
 
 commit f36d8f016173c05c428fffa6625e74e783d6547c
 Author: Hiroyuki Ikezoe <hiikezoe@gnome.org>
@@ -3260,12 +3340,12 @@ Date:   Fri May 28 20:06:35 2010 +0900
 
     A tool to output glib's memory profile.
 
- tools/Makefile.am        |  20 +++++-
- tools/rsvg-tools-main.c  | 184 +++++++++++++++++++++++++++++++++++++++++++++++
- tools/rsvg-tools-main.h  |  30 ++++++++
- tools/test-memory.c      |  35 +++++++++
- tools/test-performance.c | 163 ++---------------------------------------
- 5 files changed, 271 insertions(+), 161 deletions(-)
+ tools/Makefile.am                               |  20 ++-
+ tools/{test-performance.c => rsvg-tools-main.c} |   8 +-
+ tools/rsvg-tools-main.h                         |  30 +++++
+ tools/test-memory.c                             |  35 +++++
+ tools/test-performance.c                        | 163 +-----------------------
+ 5 files changed, 90 insertions(+), 166 deletions(-)
 
 commit 3e3b9d3a2d0b7e3abeadba224619ebe635e18f83
 Author: Hiroyuki Ikezoe <hiikezoe@gnome.org>
@@ -3829,14 +3909,12 @@ Date:   Sun Apr 18 16:36:50 2010 +0900
 
     Move rsvg-dimensions and test-performance into tools/.
 
- Makefile.am              |  15 +-----
- configure.in             |   1 +
- rsvg-dimensions.c        | 133 -----------------------------------------------
- test-performance.c       | 116 -----------------------------------------
- tools/Makefile.am        |  33 ++++++++++++
- tools/rsvg-dimensions.c  | 133 +++++++++++++++++++++++++++++++++++++++++++++++
- tools/test-performance.c | 116 +++++++++++++++++++++++++++++++++++++++++
- 7 files changed, 284 insertions(+), 263 deletions(-)
+ Makefile.am                                    | 15 +-----------
+ configure.in                                   |  1 +
+ tools/Makefile.am                              | 33 ++++++++++++++++++++++++++
+ rsvg-dimensions.c => tools/rsvg-dimensions.c   |  0
+ test-performance.c => tools/test-performance.c |  0
+ 5 files changed, 35 insertions(+), 14 deletions(-)
 
 commit dfd034d2bec00e0890824991c6eb3b93ad494d78
 Author: Hiroyuki Ikezoe <poincare@ikezoe.net>
@@ -5903,165 +5981,86 @@ Date:   Fri Jun 22 16:39:42 2007 +0000
     
     svn path=/trunk/; revision=1122
 
- tests/104201.svg                                  |   93 -
- tests/CHEMICALS.svg                               |   34 -
- tests/Mop_Bucket.svg                              |   50 -
- tests/Picasso.svg                                 | 2839 ---------------------
- tests/Poultice_1.svg                              |   30 -
- tests/Surface_Wipe.svg                            |   36 -
- tests/Units.svg                                   |   45 -
- tests/ViewBox-bak.svg                             |   27 -
- tests/ViewBox.svg                                 |   27 -
- tests/Wall_Wipe.svg                               |   51 -
- tests/background.svg                              |   39 -
- tests/chem1.svg                                   |  599 -----
- tests/circle-gradient-2.svg                       |   52 -
- tests/circle01.svg                                |   11 -
- tests/combo-3.svg                                 |   58 -
- tests/cubic01.svg                                 |   39 -
- tests/defs1.svg                                   |   38 -
- tests/double-square.svg                           |   47 -
- tests/ellipse01.svg                               |   11 -
- tests/ellipse02.svg                               |   22 -
- tests/file-directory.svg                          |   51 -
- tests/filters00.svg                               |   53 -
- tests/folder_home-2.2.svg                         |  901 -------
- tests/gnome-sodi2.svg                             |   73 -
- tests/gnomefoot.svg                               |   67 -
- tests/i-directory.svg                             |   50 -
- tests/image1.svg                                  |   10 -
- tests/intersect_bezier2_ellipse.svg               |   78 -
- tests/librsvg-logo.svg                            |  450 ----
- tests/line01.svg                                  |   21 -
- tests/lingrad01.svg                               |   25 -
- tests/lion.svg                                    |  163 --
- tests/obj_bbox.svg                                |  195 --
- tests/opac.svg                                    |   40 -
- tests/opacity01.svg                               |   47 -
- tests/polygon01.svg                               |   20 -
- tests/polyline01.svg                              |   21 -
- tests/radgrad01.svg                               |   27 -
- tests/rect-fill.svg                               |    9 -
- tests/rect-grad-new.svg                           |   13 -
- tests/rect-linear-grad.svg                        |   13 -
- tests/rect-radial-grad.svg                        |   13 -
- tests/rect-stroke-grad-linear.svg                 |   13 -
- tests/rect-stroke-grad-radial.svg                 |   13 -
- tests/rect01.svg                                  |   14 -
- tests/rect02.svg                                  |   19 -
- tests/rectangle-dashes.svg                        |   15 -
- tests/rectangle-gradient-rainbow.svg              |   29 -
- tests/rectangle-style-blizzaro-dashes.svg         |   30 -
- tests/samples/104201.svg                          |   93 +
- tests/samples/CHEMICALS.svg                       |   34 +
- tests/samples/Mop_Bucket.svg                      |   50 +
- tests/samples/Picasso.svg                         | 2839 +++++++++++++++++++++
- tests/samples/Poultice_1.svg                      |   30 +
- tests/samples/Surface_Wipe.svg                    |   36 +
- tests/samples/Units.svg                           |   45 +
- tests/samples/ViewBox-bak.svg                     |   27 +
- tests/samples/ViewBox.svg                         |   27 +
- tests/samples/Wall_Wipe.svg                       |   51 +
- tests/samples/background.svg                      |   39 +
- tests/samples/chem1.svg                           |  599 +++++
- tests/samples/circle-gradient-2.svg               |   52 +
- tests/samples/circle01.svg                        |   11 +
- tests/samples/combo-3.svg                         |   58 +
- tests/samples/cubic01.svg                         |   39 +
- tests/samples/defs1.svg                           |   38 +
- tests/samples/double-square.svg                   |   47 +
- tests/samples/ellipse01.svg                       |   11 +
- tests/samples/ellipse02.svg                       |   22 +
- tests/samples/file-directory.svg                  |   51 +
- tests/samples/filters00.svg                       |   53 +
- tests/samples/folder_home-2.2.svg                 |  901 +++++++
- tests/samples/gnome-sodi2.svg                     |   73 +
- tests/samples/gnomefoot.svg                       |   67 +
- tests/samples/i-directory.svg                     |   50 +
- tests/samples/image1.svg                          |   10 +
- tests/samples/intersect_bezier2_ellipse.svg       |   78 +
- tests/samples/librsvg-logo.svg                    |  450 ++++
- tests/samples/line01.svg                          |   21 +
- tests/samples/lingrad01.svg                       |   25 +
- tests/samples/lion.svg                            |  163 ++
- tests/samples/obj_bbox.svg                        |  195 ++
- tests/samples/opac.svg                            |   40 +
- tests/samples/opacity01.svg                       |   47 +
- tests/samples/polygon01.svg                       |   20 +
- tests/samples/polyline01.svg                      |   21 +
- tests/samples/radgrad01.svg                       |   27 +
- tests/samples/rect-fill.svg                       |    9 +
- tests/samples/rect-grad-new.svg                   |   13 +
- tests/samples/rect-linear-grad.svg                |   13 +
- tests/samples/rect-radial-grad.svg                |   13 +
- tests/samples/rect-stroke-grad-linear.svg         |   13 +
- tests/samples/rect-stroke-grad-radial.svg         |   13 +
- tests/samples/rect01.svg                          |   14 +
- tests/samples/rect02.svg                          |   19 +
- tests/samples/rectangle-dashes.svg                |   15 +
- tests/samples/rectangle-gradient-rainbow.svg      |   29 +
- tests/samples/rectangle-style-blizzaro-dashes.svg |   30 +
- tests/samples/stock_home.svg                      |  339 +++
- tests/samples/stock_paste.svg                     |  194 ++
- tests/samples/telephone.svg                       |  141 +
- tests/samples/test-20020212.svg                   |   87 +
- tests/samples/test-60544.svg                      |   19 +
- tests/samples/test-61082.svg                      |    7 +
- tests/samples/test-61223.svg                      |    9 +
- tests/samples/test-62614.svg                      |   94 +
- tests/samples/test-62620.svg                      |    4 +
- tests/samples/test-62699.svg                      |  127 +
- tests/samples/test-64684-1.svg                    |   90 +
- tests/samples/test-64684-2.svg                    |   97 +
- tests/samples/test-71297.svg                      |    8 +
- tests/samples/test-71622.svg                      |  370 +++
- tests/samples/test-nested-transform.svg           |   43 +
- tests/samples/test-opacity.svg                    |   41 +
- tests/samples/test-rgb.svg                        |    9 +
- tests/samples/test.svg                            |   21 +
- tests/samples/text-gradient-3.svg                 |   78 +
- tests/samples/text-outline-3b.svg                 |   54 +
- tests/samples/text-sizes-NimbusSans.svg           |   38 +
- tests/samples/text01.svg                          |   17 +
- tests/samples/textdecoration01.svg                |   22 +
- tests/samples/tspan.svg                           |   14 +
- tests/samples/tspan01.svg                         |   20 +
- tests/samples/undo-128-d-sodipodi.svg             |   63 +
- tests/samples/undo-128-d-sodipodi.svg.gz          |  Bin 0 -> 1066 bytes
- tests/samples/undo-128-new.svg                    |    4 +
- tests/samples/undo-v2.1-sodipodi0.26.svg          |   51 +
- tests/samples/window.svg                          |  158 ++
- tests/stock_home.svg                              |  339 ---
- tests/stock_paste.svg                             |  194 --
- tests/telephone.svg                               |  141 -
- tests/test-20020212.svg                           |   87 -
- tests/test-60544.svg                              |   19 -
- tests/test-61082.svg                              |    7 -
- tests/test-61223.svg                              |    9 -
- tests/test-62614.svg                              |   94 -
- tests/test-62620.svg                              |    4 -
- tests/test-62699.svg                              |  127 -
- tests/test-64684-1.svg                            |   90 -
- tests/test-64684-2.svg                            |   97 -
- tests/test-71297.svg                              |    8 -
- tests/test-71622.svg                              |  370 ---
- tests/test-nested-transform.svg                   |   43 -
- tests/test-opacity.svg                            |   41 -
- tests/test-rgb.svg                                |    9 -
- tests/test.svg                                    |   21 -
- tests/text-gradient-3.svg                         |   78 -
- tests/text-outline-3b.svg                         |   54 -
- tests/text-sizes-NimbusSans.svg                   |   38 -
- tests/text01.svg                                  |   17 -
- tests/textdecoration01.svg                        |   22 -
- tests/tspan.svg                                   |   14 -
- tests/tspan01.svg                                 |   20 -
- tests/undo-128-d-sodipodi.svg                     |   63 -
- tests/undo-128-d-sodipodi.svg.gz                  |  Bin 1066 -> 0 bytes
- tests/undo-128-new.svg                            |    4 -
- tests/undo-v2.1-sodipodi0.26.svg                  |   51 -
- tests/window.svg                                  |  158 --
- 158 files changed, 8840 insertions(+), 8840 deletions(-)
+ tests/{ => samples}/104201.svg                          |   0
+ tests/{ => samples}/CHEMICALS.svg                       |   0
+ tests/{ => samples}/Mop_Bucket.svg                      |   0
+ tests/{ => samples}/Picasso.svg                         |   0
+ tests/{ => samples}/Poultice_1.svg                      |   0
+ tests/{ => samples}/Surface_Wipe.svg                    |   0
+ tests/{ => samples}/Units.svg                           |   0
+ tests/{ => samples}/ViewBox-bak.svg                     |   0
+ tests/{ => samples}/ViewBox.svg                         |   0
+ tests/{ => samples}/Wall_Wipe.svg                       |   0
+ tests/{ => samples}/background.svg                      |   0
+ tests/{ => samples}/chem1.svg                           |   0
+ tests/{ => samples}/circle-gradient-2.svg               |   0
+ tests/{ => samples}/circle01.svg                        |   0
+ tests/{ => samples}/combo-3.svg                         |   0
+ tests/{ => samples}/cubic01.svg                         |   0
+ tests/{ => samples}/defs1.svg                           |   0
+ tests/{ => samples}/double-square.svg                   |   0
+ tests/{ => samples}/ellipse01.svg                       |   0
+ tests/{ => samples}/ellipse02.svg                       |   0
+ tests/{ => samples}/file-directory.svg                  |   0
+ tests/{ => samples}/filters00.svg                       |   0
+ tests/{ => samples}/folder_home-2.2.svg                 |   0
+ tests/{ => samples}/gnome-sodi2.svg                     |   0
+ tests/{ => samples}/gnomefoot.svg                       |   0
+ tests/{ => samples}/i-directory.svg                     |   0
+ tests/{ => samples}/image1.svg                          |   0
+ tests/{ => samples}/intersect_bezier2_ellipse.svg       |   0
+ tests/{ => samples}/librsvg-logo.svg                    |   0
+ tests/{ => samples}/line01.svg                          |   0
+ tests/{ => samples}/lingrad01.svg                       |   0
+ tests/{ => samples}/lion.svg                            |   0
+ tests/{ => samples}/obj_bbox.svg                        |   0
+ tests/{ => samples}/opac.svg                            |   0
+ tests/{ => samples}/opacity01.svg                       |   0
+ tests/{ => samples}/polygon01.svg                       |   0
+ tests/{ => samples}/polyline01.svg                      |   0
+ tests/{ => samples}/radgrad01.svg                       |   0
+ tests/{ => samples}/rect-fill.svg                       |   0
+ tests/{ => samples}/rect-grad-new.svg                   |   0
+ tests/{ => samples}/rect-linear-grad.svg                |   0
+ tests/{ => samples}/rect-radial-grad.svg                |   0
+ tests/{ => samples}/rect-stroke-grad-linear.svg         |   0
+ tests/{ => samples}/rect-stroke-grad-radial.svg         |   0
+ tests/{ => samples}/rect01.svg                          |   0
+ tests/{ => samples}/rect02.svg                          |   0
+ tests/{ => samples}/rectangle-dashes.svg                |   0
+ tests/{ => samples}/rectangle-gradient-rainbow.svg      |   0
+ tests/{ => samples}/rectangle-style-blizzaro-dashes.svg |   0
+ tests/{ => samples}/stock_home.svg                      |   0
+ tests/{ => samples}/stock_paste.svg                     |   0
+ tests/{ => samples}/telephone.svg                       |   0
+ tests/{ => samples}/test-20020212.svg                   |   0
+ tests/{ => samples}/test-60544.svg                      |   0
+ tests/{ => samples}/test-61082.svg                      |   0
+ tests/{ => samples}/test-61223.svg                      |   0
+ tests/{ => samples}/test-62614.svg                      |   0
+ tests/{ => samples}/test-62620.svg                      |   0
+ tests/{ => samples}/test-62699.svg                      |   0
+ tests/{ => samples}/test-64684-1.svg                    |   0
+ tests/{ => samples}/test-64684-2.svg                    |   0
+ tests/{ => samples}/test-71297.svg                      |   0
+ tests/{ => samples}/test-71622.svg                      |   0
+ tests/{ => samples}/test-nested-transform.svg           |   0
+ tests/{ => samples}/test-opacity.svg                    |   0
+ tests/{ => samples}/test-rgb.svg                        |   0
+ tests/{ => samples}/test.svg                            |   0
+ tests/{ => samples}/text-gradient-3.svg                 |   0
+ tests/{ => samples}/text-outline-3b.svg                 |   0
+ tests/{ => samples}/text-sizes-NimbusSans.svg           |   0
+ tests/{ => samples}/text01.svg                          |   0
+ tests/{ => samples}/textdecoration01.svg                |   0
+ tests/{ => samples}/tspan.svg                           |   0
+ tests/{ => samples}/tspan01.svg                         |   0
+ tests/{ => samples}/undo-128-d-sodipodi.svg             |   0
+ tests/{ => samples}/undo-128-d-sodipodi.svg.gz          | Bin
+ tests/{ => samples}/undo-128-new.svg                    |   0
+ tests/{ => samples}/undo-v2.1-sodipodi0.26.svg          |   0
+ tests/{ => samples}/window.svg                          |   0
+ 79 files changed, 0 insertions(+), 0 deletions(-)
 
 commit 2e1e06855c9cb585eeda75c8d8171ea9b3883a1f
 Author: Emmanuel Pacaud <emmanuel.pacaud@lapp.in2p3.fr>
@@ -6984,34 +6983,32 @@ Date:   Sat Jan 27 22:39:45 2007 +0000
     
     svn path=/trunk/; revision=1093
 
- ChangeLog                               |   10 +
- Makefile.am                             |    2 +-
- configure.in                            |    2 +
- tests/Artwork.svg                       | 1816 -------------------------------
- tests/Makefile.am                       |   16 +
- tests/bugs/388545-ref.png               |  Bin 0 -> 19038 bytes
- tests/bugs/388545.svg                   |  445 ++++++++
- tests/butterfly.svg                     |   12 -
- tests/pdiff/CMakeLists.txt              |   55 +
- tests/pdiff/Makefile.am                 |   16 +
- tests/pdiff/README.txt                  |   45 +
- tests/pdiff/args.c                      |  119 ++
- tests/pdiff/args.h                      |   46 +
- tests/pdiff/gpl.txt                     |  340 ++++++
- tests/pdiff/lpyramid.c                  |  111 ++
- tests/pdiff/lpyramid.h                  |   32 +
- tests/pdiff/pdiff.c                     |  374 +++++++
- tests/pdiff/pdiff.h                     |   40 +
- tests/pdiff/perceptualdiff.c            |  102 ++
- tests/rsvg-test.c                       |  378 +++++++
- tests/rsvg-test.txt                     |    8 +
- tests/samples/artwork-ref.png           |  Bin 0 -> 48010 bytes
- tests/samples/artwork.svg               | 1816 +++++++++++++++++++++++++++++++
- tests/samples/butterfly-ref.png         |  Bin 0 -> 59530 bytes
- tests/samples/butterfly.svg             |   12 +
- tests/svg1.2/comp-op-porterduff-ref.png |  Bin 0 -> 26432 bytes
- tests/svg1.2/comp-op-porterduff.svg     |  298 +++++
- 27 files changed, 4266 insertions(+), 1829 deletions(-)
+ ChangeLog                                  |  10 +
+ Makefile.am                                |   2 +-
+ configure.in                               |   2 +
+ tests/Makefile.am                          |  16 ++
+ tests/bugs/388545-ref.png                  | Bin 0 -> 19038 bytes
+ tests/bugs/388545.svg                      | 445 +++++++++++++++++++++++++++++
+ tests/pdiff/CMakeLists.txt                 |  55 ++++
+ tests/pdiff/Makefile.am                    |  16 ++
+ tests/pdiff/README.txt                     |  45 +++
+ tests/pdiff/args.c                         | 119 ++++++++
+ tests/pdiff/args.h                         |  46 +++
+ tests/pdiff/gpl.txt                        | 340 ++++++++++++++++++++++
+ tests/pdiff/lpyramid.c                     | 111 +++++++
+ tests/pdiff/lpyramid.h                     |  32 +++
+ tests/pdiff/pdiff.c                        | 374 ++++++++++++++++++++++++
+ tests/pdiff/pdiff.h                        |  40 +++
+ tests/pdiff/perceptualdiff.c               | 102 +++++++
+ tests/rsvg-test.c                          | 378 ++++++++++++++++++++++++
+ tests/rsvg-test.txt                        |   8 +
+ tests/samples/artwork-ref.png              | Bin 0 -> 48010 bytes
+ tests/{Artwork.svg => samples/artwork.svg} |   0
+ tests/samples/butterfly-ref.png            | Bin 0 -> 59530 bytes
+ tests/{ => samples}/butterfly.svg          |   0
+ tests/svg1.2/comp-op-porterduff-ref.png    | Bin 0 -> 26432 bytes
+ tests/svg1.2/comp-op-porterduff.svg        | 298 +++++++++++++++++++
+ 25 files changed, 2438 insertions(+), 1 deletion(-)
 
 commit abbd9bdfe3aabf41284e77eeac1001c5556080ba
 Author: Emmanuel Pacaud <emmanuel.pacaud@lapp.in2p3.fr>
@@ -10123,16 +10120,16 @@ Date:   Sun Aug 7 23:41:29 2005 +0000
 
     implement rsvg_handle_get_pixbuf() API in terms of Cairo if it's around, and libart is disabled, or nothing if neither is found.
 
- ChangeLog             |  11 +-
- Makefile.am           |  15 ++-
- configure.in          |  18 +++
- rsvg-art-file-util.c  | 361 --------------------------------------------------
- rsvg-base-file-util.c |  73 ++++++++++
- rsvg-cairo-draw.c     |  14 +-
- rsvg-file-util.c      | 332 +++++++++++++++++++++++++++++++++++++++++++---
- rsvg.c                | 108 ++++++++++++---
- test-display.c        |   2 +-
- 9 files changed, 514 insertions(+), 420 deletions(-)
+ ChangeLog                                 |  11 +-
+ Makefile.am                               |  15 +-
+ configure.in                              |  18 ++
+ rsvg-art-file-util.c                      | 361 ------------------------------
+ rsvg-file-util.c => rsvg-base-file-util.c |   0
+ rsvg-cairo-draw.c                         |  14 +-
+ rsvg-file-util.c                          | 332 +++++++++++++++++++++++++--
+ rsvg.c                                    | 108 +++++++--
+ test-display.c                            |   2 +-
+ 9 files changed, 441 insertions(+), 420 deletions(-)
 
 commit 37bedd44cc0e15a52b3c7dd6d58788855f1e0817
 Author: Dom Lachowicz <doml@src.gnome.org>
@@ -10321,16 +10318,16 @@ Date:   Wed Aug 3 23:47:26 2005 +0000
 
     more compartmentalization of libart, accomodation for cairo
 
- ChangeLog            |   7 +
- Makefile.am          |   1 +
- rsvg-art-file-util.c | 361 +++++++++++++++++++++++++++++++++++++++++++++++++++
- rsvg-base.c          |   2 +-
- rsvg-cairo-draw.c    |  12 +-
- rsvg-file-util.c     | 332 ++++------------------------------------------
- rsvg-private.h       |  10 --
- rsvg.c               |   2 +-
- rsvg.h               |  16 +++
- 9 files changed, 415 insertions(+), 328 deletions(-)
+ ChangeLog                                |   7 +
+ Makefile.am                              |   1 +
+ rsvg-file-util.c => rsvg-art-file-util.c |   0
+ rsvg-base.c                              |   2 +-
+ rsvg-cairo-draw.c                        |  12 +-
+ rsvg-file-util.c                         | 332 ++-----------------------------
+ rsvg-private.h                           |  10 -
+ rsvg.c                                   |   2 +-
+ rsvg.h                                   |  16 ++
+ 9 files changed, 54 insertions(+), 328 deletions(-)
 
 commit 7cd6345dfe69e95b652998717d0543a94dc84ac7
 Author: Carl Worth <cworth@src.gnome.org>
@@ -11168,14 +11165,14 @@ Date:   Fri Feb 25 13:50:39 2005 +0000
 
     de-artification of core
 
- ChangeLog               |   4 +
- Makefile.am             |  10 +-
- rsvg-art-draw.c         |   4 +-
- rsvg-art-paint-server.c | 530 +++++++++++++++++++++++++++++++++++++++
- rsvg-art-paint-server.h |  40 +++
- rsvg-paint-server.c     | 639 +++---------------------------------------------
- rsvg-paint-server.h     |  34 ++-
- 7 files changed, 645 insertions(+), 616 deletions(-)
+ ChangeLog                                      |   4 +
+ Makefile.am                                    |  10 +-
+ rsvg-art-draw.c                                |   4 +-
+ rsvg-paint-server.c => rsvg-art-paint-server.c | 502 +++----------------
+ rsvg-art-paint-server.h                        |  40 ++
+ rsvg-paint-server.c                            | 639 ++-----------------------
+ rsvg-paint-server.h                            |  34 +-
+ 7 files changed, 185 insertions(+), 1048 deletions(-)
 
 commit e277e02331ba5530787534545a47a202ac6b12cb
 Author: Dom Lachowicz <doml@src.gnome.org>
@@ -15859,28 +15856,28 @@ Date:   Wed Jan 8 21:24:33 2003 +0000
 
     restructure source code tree in order to be more managable, handle "wider" and "narrower" text specifications
 
- ChangeLog           |    4 +
- Makefile.am         |    7 +
- rsvg-bpath-util.c   |  237 ++--
- rsvg-bpath-util.h   |   46 +-
- rsvg-css.c          |  866 ++++++-------
- rsvg-css.h          |   11 +
- rsvg-defs.c         |   29 +-
- rsvg-defs.h         |   31 +-
- rsvg-file-util.c    |  312 +++++
- rsvg-paint-server.c |  507 ++++----
- rsvg-paint-server.h |   11 +
- rsvg-path.h         |   33 +-
- rsvg-private.h      |   79 ++
- rsvg-shapes.c       |  668 ++++++++++
- rsvg-shapes.h       |   45 +
- rsvg-styles.c       |  750 +++++++++++
- rsvg-styles.h       |  101 ++
- rsvg-text.c         |  378 ++++++
- rsvg-text.h         |   38 +
- rsvg.c              | 3509 +++++++++++----------------------------------------
- rsvg.h              |    4 +-
- 21 files changed, 3979 insertions(+), 3687 deletions(-)
+ ChangeLog                  |    4 +
+ Makefile.am                |    7 +
+ rsvg-bpath-util.c          |  237 ++-
+ rsvg-bpath-util.h          |   46 +-
+ rsvg-css.c                 |  866 +++++------
+ rsvg-css.h                 |   11 +
+ rsvg-defs.c                |   29 +-
+ rsvg-defs.h                |   31 +-
+ rsvg-file-util.c           |  312 ++++
+ rsvg-paint-server.c        |  507 +++----
+ rsvg-paint-server.h        |   11 +
+ rsvg-path.h                |   33 +-
+ rsvg-private.h             |   79 +
+ rsvg-shapes.c              |  668 +++++++++
+ rsvg-shapes.h              |   45 +
+ rsvg-styles.c              |  750 ++++++++++
+ rsvg-styles.h              |  101 ++
+ rsvg-text.c                |  378 +++++
+ rsvg-path.h => rsvg-text.h |   36 +-
+ rsvg.c                     | 3509 +++++++++-----------------------------------
+ rsvg.h                     |    4 +-
+ 21 files changed, 3958 insertions(+), 3706 deletions(-)
 
 commit a7ecceadc7606d7526615fc087a9ac4ee53cfed3
 Author: Dom Lachowicz <doml@src.gnome.org>
@@ -16260,82 +16257,67 @@ Date:   Sat Oct 5 20:49:41 2002 +0000
     todo 1: bug in gdk-pixbuf's alpha handling
     todo 2: once #1 is fixed, properly implement rotate()
 
- ChangeLog                           |    6 +
- gdk-pixbuf-loader/.cvsignore        |    2 +
- rsvg.c                              |   83 +-
- test-20020212.svg                   |   87 --
- test-60544.svg                      |   19 -
- test-61082.svg                      |    7 -
- test-61223.svg                      |    9 -
- test-62614.svg                      |   94 --
- test-62620.svg                      |    4 -
- test-62699.svg                      |  127 --
- test-64684-1.svg                    |   90 --
- test-64684-2.svg                    |  118 --
- test-71297.svg                      |    8 -
- test-71622.svg                      |  370 -----
- test-display.c                      |   71 +
- test-nested-transform.svg           |   43 -
- test-opacity.svg                    |   41 -
- test-rgb.svg                        |    9 -
- test.svg                            |   21 -
- tests/Artwork.svg                   | 1816 ++++++++++++++++++++++
- tests/CHEMICALS.svg                 |   34 +
- tests/Mop_Bucket.svg                |   50 +
- tests/Picasso.svg                   | 2839 +++++++++++++++++++++++++++++++++++
- tests/Poultice_1.svg                |   30 +
- tests/Surface_Wipe.svg              |   36 +
- tests/Units.svg                     |   45 +
- tests/ViewBox-bak.svg               |   27 +
- tests/ViewBox.svg                   |   27 +
- tests/Wall_Wipe.svg                 |   51 +
- tests/circle-gradient-2.svg         |   13 +
- tests/circle01.svg                  |   11 +
- tests/combo-3.svg                   |    9 +
- tests/double-square.svg             |   10 +
- tests/ellipse01.svg                 |   11 +
- tests/ellipse02.svg                 |   22 +
- tests/file-directory.svg            |   51 +
- tests/filters00.svg                 |   53 +
- tests/image1.svg                    |   10 +
- tests/intersect_bezier2_ellipse.svg |   46 +
- tests/line01.svg                    |   21 +
- tests/lingrad01.svg                 |   25 +
- tests/lion.svg                      |  163 ++
- tests/opac.svg                      |   13 +
- tests/opacity01.svg                 |   47 +
- tests/polygon01.svg                 |   20 +
- tests/polyline01.svg                |   21 +
- tests/radgrad01.svg                 |   27 +
- tests/rect-fill.svg                 |    9 +
- tests/rect-grad-new.svg             |   13 +
- tests/rect-linear-grad.svg          |   13 +
- tests/rect-radial-grad.svg          |   13 +
- tests/rect-stroke-grad-linear.svg   |   13 +
- tests/rect-stroke-grad-radial.svg   |   13 +
- tests/rect01.svg                    |   14 +
- tests/rect02.svg                    |   19 +
- tests/telephone.svg                 |  141 ++
- tests/test-20020212.svg             |   87 ++
- tests/test-60544.svg                |   19 +
- tests/test-61082.svg                |    7 +
- tests/test-61223.svg                |    9 +
- tests/test-62614.svg                |   94 ++
- tests/test-62620.svg                |    4 +
- tests/test-62699.svg                |  127 ++
- tests/test-64684-1.svg              |   90 ++
- tests/test-64684-2.svg              |  118 ++
- tests/test-71297.svg                |    8 +
- tests/test-71622.svg                |  370 +++++
- tests/test-nested-transform.svg     |   43 +
- tests/test-opacity.svg              |   41 +
- tests/test-rgb.svg                  |    9 +
- tests/test.svg                      |   21 +
- tests/text-sizes-NimbusSans.svg     |   28 +
- tests/tspan.svg                     |   14 +
- tests/undo-128-d-sodipodi.svg       |   63 +
- tests/undo-128-new.svg              |    4 +
- 75 files changed, 7078 insertions(+), 1063 deletions(-)
+ ChangeLog                                          |    6 +
+ gdk-pixbuf-loader/.cvsignore                       |    2 +
+ rsvg.c                                             |   83 +-
+ test-display.c                                     |   71 +
+ tests/Artwork.svg                                  | 1816 +++++++++++++
+ tests/CHEMICALS.svg                                |   34 +
+ tests/Mop_Bucket.svg                               |   50 +
+ tests/Picasso.svg                                  | 2839 ++++++++++++++++++++
+ tests/Poultice_1.svg                               |   30 +
+ tests/Surface_Wipe.svg                             |   36 +
+ tests/Units.svg                                    |   45 +
+ tests/ViewBox-bak.svg                              |   27 +
+ tests/ViewBox.svg                                  |   27 +
+ tests/Wall_Wipe.svg                                |   51 +
+ tests/circle-gradient-2.svg                        |   13 +
+ tests/circle01.svg                                 |   11 +
+ tests/combo-3.svg                                  |    9 +
+ tests/double-square.svg                            |   10 +
+ tests/ellipse01.svg                                |   11 +
+ tests/ellipse02.svg                                |   22 +
+ tests/file-directory.svg                           |   51 +
+ tests/filters00.svg                                |   53 +
+ tests/image1.svg                                   |   10 +
+ tests/intersect_bezier2_ellipse.svg                |   46 +
+ tests/line01.svg                                   |   21 +
+ tests/lingrad01.svg                                |   25 +
+ tests/lion.svg                                     |  163 ++
+ tests/opac.svg                                     |   13 +
+ tests/opacity01.svg                                |   47 +
+ tests/polygon01.svg                                |   20 +
+ tests/polyline01.svg                               |   21 +
+ tests/radgrad01.svg                                |   27 +
+ tests/rect-fill.svg                                |    9 +
+ tests/rect-grad-new.svg                            |   13 +
+ tests/rect-linear-grad.svg                         |   13 +
+ tests/rect-radial-grad.svg                         |   13 +
+ tests/rect-stroke-grad-linear.svg                  |   13 +
+ tests/rect-stroke-grad-radial.svg                  |   13 +
+ tests/rect01.svg                                   |   14 +
+ tests/rect02.svg                                   |   19 +
+ tests/telephone.svg                                |  141 +
+ test-20020212.svg => tests/test-20020212.svg       |    0
+ test-60544.svg => tests/test-60544.svg             |    0
+ test-61082.svg => tests/test-61082.svg             |    0
+ test-61223.svg => tests/test-61223.svg             |    0
+ test-62614.svg => tests/test-62614.svg             |    0
+ test-62620.svg => tests/test-62620.svg             |    0
+ test-62699.svg => tests/test-62699.svg             |    0
+ test-64684-1.svg => tests/test-64684-1.svg         |    0
+ test-64684-2.svg => tests/test-64684-2.svg         |    0
+ test-71297.svg => tests/test-71297.svg             |    0
+ test-71622.svg => tests/test-71622.svg             |    0
+ .../test-nested-transform.svg                      |    0
+ test-opacity.svg => tests/test-opacity.svg         |    0
+ test-rgb.svg => tests/test-rgb.svg                 |    0
+ test.svg => tests/test.svg                         |    0
+ tests/text-sizes-NimbusSans.svg                    |   28 +
+ tests/tspan.svg                                    |   14 +
+ tests/undo-128-d-sodipodi.svg                      |   63 +
+ tests/undo-128-new.svg                             |    4 +
+ 60 files changed, 6031 insertions(+), 16 deletions(-)
 
 commit f2e0bf82eda899387bd44a6862e839e4e02a6989
 Author: Sven Neumann <neo@src.gnome.org>
@@ -16725,22 +16707,15 @@ Date:   Wed Sep 25 17:48:22 2002 +0000
 
     rename files to get a bit of uniqueness and a clearer starting point
 
- gtk-engine/Makefile.am       |   14 +-
- gtk-engine/pixbuf-draw.c     | 1035 ------------------------------------------
- gtk-engine/pixbuf-main.c     |   58 ---
- gtk-engine/pixbuf-rc-style.c |  816 ---------------------------------
- gtk-engine/pixbuf-rc-style.h |   50 --
- gtk-engine/pixbuf-render.c   |  805 --------------------------------
- gtk-engine/pixbuf-style.h    |   50 --
- gtk-engine/pixbuf.h          |  193 --------
- gtk-engine/svg-draw.c        | 1035 ++++++++++++++++++++++++++++++++++++++++++
- gtk-engine/svg-main.c        |   58 +++
- gtk-engine/svg-rc-style.c    |  816 +++++++++++++++++++++++++++++++++
- gtk-engine/svg-rc-style.h    |   50 ++
- gtk-engine/svg-render.c      |  805 ++++++++++++++++++++++++++++++++
- gtk-engine/svg-style.h       |   50 ++
- gtk-engine/svg.h             |  193 ++++++++
- 15 files changed, 3014 insertions(+), 3014 deletions(-)
+ gtk-engine/Makefile.am                           | 14 +++++++-------
+ gtk-engine/{pixbuf-draw.c => svg-draw.c}         |  6 +++---
+ gtk-engine/{pixbuf-main.c => svg-main.c}         |  6 +++---
+ gtk-engine/{pixbuf-rc-style.c => svg-rc-style.c} |  6 +++---
+ gtk-engine/{pixbuf-rc-style.h => svg-rc-style.h} |  0
+ gtk-engine/{pixbuf-render.c => svg-render.c}     |  2 +-
+ gtk-engine/{pixbuf-style.h => svg-style.h}       |  0
+ gtk-engine/{pixbuf.h => svg.h}                   |  0
+ 8 files changed, 17 insertions(+), 17 deletions(-)
 
 commit 9fbc541a531871b5ee9abfe897db0e9895365055
 Author: Dom Lachowicz <doml@src.gnome.org>
@@ -18312,22 +18287,21 @@ Date:   Mon Jul 9 19:12:43 2001 +0000
     	* test-rsvg.c: (main):
     	Port to GNOME2.
 
- .cvsignore        |   8 +--
- ChangeLog         |  18 +++++
- Makefile.am       |  25 +------
- README            |  15 ++++-
- autogen.sh        | 111 ++++--------------------------
- configure.in      | 198 ++++++++++++++----------------------------------------
- librsvg-1.0.pc.in |  10 ---
- librsvg-2.0.pc.in |  10 +++
- librsvg-config.in |  58 ----------------
- librsvg.spec.in   |   1 -
- librsvgConf.sh.in |   6 --
- rsvg.c            |   6 +-
- test-ft-gtk.c     |   3 -
- test-ft.c         |   3 +
- test-rsvg.c       |   2 +
- 15 files changed, 119 insertions(+), 355 deletions(-)
+ .cvsignore                             |   8 +-
+ ChangeLog                              |  18 +++
+ Makefile.am                            |  25 +----
+ README                                 |  15 ++-
+ autogen.sh                             | 111 +++---------------
+ configure.in                           | 198 ++++++++-------------------------
+ librsvg-1.0.pc.in => librsvg-2.0.pc.in |   0
+ librsvg-config.in                      |  58 ----------
+ librsvg.spec.in                        |   1 -
+ librsvgConf.sh.in                      |   6 -
+ rsvg.c                                 |   6 +-
+ test-ft-gtk.c                          |   3 -
+ test-ft.c                              |   3 +
+ test-rsvg.c                            |   2 +
+ 14 files changed, 109 insertions(+), 345 deletions(-)
 
 commit c22a76f2792f8c3c1ec9541bddd2e07173a27911
 Author: Darin Adler <darin@src.gnome.org>

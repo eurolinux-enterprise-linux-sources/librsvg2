@@ -1,5 +1,5 @@
 m4_define([rsvg_major_version],[2])
-m4_define([rsvg_minor_version],[37])
+m4_define([rsvg_minor_version],[39])
 m4_define([rsvg_micro_version],[0])
 m4_define([rsvg_extra_version],[])
 m4_define([rsvg_version],[rsvg_major_version.rsvg_minor_version.rsvg_micro_version()rsvg_extra_version])
@@ -168,7 +168,7 @@ gdk_pixbuf_moduledir=
 if test "$enable_pixbuf_loader" = "yes"; then
   PKG_CHECK_MODULES([GDK_PIXBUF],[gdk-pixbuf-2.0 >= $GDK_PIXBUF_REQUIRED])
 
-  AC_PATH_PROGS([GDK_PIXBUF_QUERYLOADERS],[gdk-pixbuf-query-loaders-64 gdk-pixbuf-query-loaders],[none])
+  AC_PATH_PROGS([GDK_PIXBUF_QUERYLOADERS],[gdk-pixbuf-query-loaders-64 gdk-pixbuf-query-loaders-32 gdk-pixbuf-query-loaders],[none])
 
   if test "x$GDK_PIXBUF_QUERYLOADERS" = "xnone"; then
     AC_MSG_ERROR([gdk-pixbuf-query-loaders not found in path])
@@ -234,7 +234,7 @@ CC_CHECK_CFLAGS_APPEND([ \
   -Wformat-nonliteral -Werror=format-security \
   -Wsign-compare -Werror=implicit-function-declaration \
   -Wpointer-arith -Wwrite-strings -Wstrict-prototypes \
-  -Waggregate-return -Wcast-align -Wimplicit -Wuninitialized \
+  -Wnoaggregate-return -Wcast-align -Wimplicit -Wuninitialized \
   -Wmissing-prototypes -Wmissing-declarations -Wnested-externs \
   -Wpacked -Wmissing-format-attribute -Wshadow \
   -Wstrict-aliasing=2 -Winit-self -Wunsafe-loop-optimizations \
